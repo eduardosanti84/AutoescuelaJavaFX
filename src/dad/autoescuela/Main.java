@@ -1,6 +1,8 @@
 package dad.autoescuela;
 
 import java.io.IOException;
+
+import dad.autoescuela.controllers.MenuProfesorController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -12,13 +14,13 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		
 		FXMLLoader loader = new FXMLLoader();
-		//loader.setLocation(Main.class.getResource("ui/Cualquiercosa.fxml"));
+		loader.setLocation(Main.class.getResource("ui/MenuProfesor.fxml"));
 		
 		try {
 			Scene scene = new Scene(loader.load());
 			
-			//Controladorloquesea controlador = loader.getController();
-			//controlador.setMain(this);
+			MenuProfesorController menuProfesorController = loader.getController();
+			menuProfesorController.setMain(this);
 			
 			primaryStage.setScene(scene);
 			primaryStage.show();
