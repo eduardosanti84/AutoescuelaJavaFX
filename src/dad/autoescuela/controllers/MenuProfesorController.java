@@ -1,28 +1,25 @@
 package dad.autoescuela.controllers;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-
 import dad.autoescuela.Main;
-import dad.autoescuela.connection.BDconnection;
+import dad.autoescuela.model.Pregunta;
 import dad.autoescuela.model.Usuario;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import dad.autoescuela.services.ServiceLocator;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
-import javafx.util.Callback;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.ImageView;
 
 public class MenuProfesorController {
 
+@SuppressWarnings("unused")
 private Main main;
 	
 	@FXML
@@ -35,11 +32,36 @@ private Main main;
 	private TextField dniTextField;
 	@FXML
 	private TextField passwordTextField;
-	@FXML
-	private TableView tablaUsuarios;
 	
-	private static ObservableList<ObservableList> datos;  
-
+	@FXML
+	private TableView<Usuario> tablaUsuarios;
+	@FXML
+	private TableColumn<Usuario, String> dniColumn;
+	@FXML
+	private TableColumn<Usuario, String> nombreColumn;
+	@FXML
+	private TableColumn<Usuario, Boolean> profesorColumn;
+	
+	@FXML
+	private RadioButton rb1;
+	@FXML
+	private RadioButton rb2;
+	@FXML
+	private RadioButton rb3;
+	
+	@FXML
+	private Button guardarPreguntaButton;
+	@FXML
+	private TextArea enunciadoTextArea;
+	@FXML
+	private TextArea pregunta1TextArea;
+	@FXML
+	private TextArea pregunta2TextArea;
+	@FXML
+	private TextArea pregunta3TextArea;
+	@FXML
+	private ImageView imagenPregunta;
+	
 	@FXML
 	private void initialize(){
 		
@@ -56,62 +78,66 @@ private Main main;
 
 		guardarUsuarioButton.onActionProperty().set(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent arg0) {
-
-				System.out.println("guardando..." + nombreTextField.textProperty().getValue());
-				System.out.println("guardando..." + dniTextField.textProperty().getValue());
-				System.out.println("guardando..." + passwordTextField.textProperty().getValue());
-				System.out.println("guardando..." + profesorButton.selectedProperty().getValue());
+				
+				Usuario usuario = new Usuario();
+				usuario.setNombre(nombreTextField.getText());
+				usuario.setDni(dniTextField.getText());
+				usuario.setPass(passwordTextField.getText());
+				usuario.setProfesor(profesorButton.isSelected());
+				
+				
+				if(ServiceLocator.getUsuarioServices().crearUsuario(usuario)){
+					
+				}
+				else{
+					
+				}
 			}
 		});
 		///////////////////////////////////////////////////////////////////////////////////////////TODO VER USUARIOS /////
+		dniColumn.setCellValueFactory(cellData -> cellData.getValue().dniProperty());
+		nombreColumn.setCellValueFactory(cellData -> cellData.getValue().nombreProperty());
+		//passColumn.setCellValueFactory(cellData -> cellData.getValue().dniProperty());
+		profesorColumn.setCellValueFactory(cellData -> cellData.getValue().profesorProperty());
 		
-		Connection con;  
-		datos = FXCollections.observableArrayList(); 
+//		tablaUsuarios.getSelectionModel().selectedItemProperty().addListener(
+//	            (observable, oldValue, newValue) -> showUsuariosDetails(newValue));
+
+		tablaUsuarios.setItems(ServiceLocator.getUsuarioServices().listarUsuarios());
+
+		////////////////////////////////////////////////////////////////////////////////////TODO FORMULARIO PREGUNTA /////
 		
-		try{  
-			con = BDconnection.connect();  
-			String consulta = "SELECT * from usuarios";    
-			ResultSet rs = con.createStatement().executeQuery(consulta); 
+		final ToggleGroup grupoRB = new ToggleGroup();
+		rb1.setToggleGroup(grupoRB);
+		rb1.setSelected(true);
+		rb2.setToggleGroup(grupoRB);
+		rb3.setToggleGroup(grupoRB);
 
-			// crear columnas
-			for(int i=0 ; i<rs.getMetaData().getColumnCount(); i++){
-				final int j = i;                
-				TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i+1));
-				col.setCellValueFactory(new Callback<CellDataFeatures<ObservableList,String>,ObservableValue<String>>(){                    
-					public ObservableValue<String> call(CellDataFeatures<ObservableList, String> param) {                                                                                              
-						return new SimpleStringProperty(param.getValue().get(j).toString());                        
-					}                    
-				});
-
-				tablaUsuarios.getColumns().addAll(col); 
-				System.out.println("Column ["+i+"] ");
+		
+		guardarPreguntaButton.onActionProperty().set(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent arg0) {
+				
+				Pregunta pregunta = new Pregunta();
+				pregunta.setEnunciado(enunciadoTextArea.getText());
+				pregunta.setPregunta1(pregunta1TextArea.getText());
+				pregunta.setPregunta2(pregunta2TextArea.getText());
+				pregunta.setPregunta3(pregunta3TextArea.getText());
+				pregunta.setRespuesta("1");
+				
+				if(ServiceLocator.getPreguntaServices().crearPregunta(pregunta)){
+					
+				}
+				else{
+					
+				}
 			}
-
-			//crear filas
-            while(rs.next()){
-                //Iterate Row
-                ObservableList<String> row = FXCollections.observableArrayList();
-                for(int i=1 ; i<=rs.getMetaData().getColumnCount(); i++){
-                    //Iterate Column
-                    row.add(rs.getString(i));
-                }
-                System.out.println("Row [1] added "+row );
-                datos.add(row);
-
-            }
-
-            tablaUsuarios.setItems(datos);
-			
-		}catch(Exception e){  
-			e.printStackTrace();      
-		}  
+		});
 	}
 	
 	public void setMain(Main main) {
 		this.main = main;
 	}
 }
-
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////

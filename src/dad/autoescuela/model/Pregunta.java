@@ -13,6 +13,7 @@ public class Pregunta {
 	private final StringProperty pregunta2 = new SimpleStringProperty();
 	private final StringProperty pregunta3 = new SimpleStringProperty();
 	private final StringProperty respuesta = new SimpleStringProperty();
+	
 	public final IntegerProperty idProperty() {
 		return this.id;
 	}
@@ -102,11 +103,9 @@ public class Pregunta {
 		if (getClass() != obj.getClass())
 			return false;
 		Pregunta other = (Pregunta) obj;
-		if (id.getValue() == null) {
-			if (other.id.getValue() != null)
-				return false;
-		} else if (!id.getValue().equals(other.id.getValue()))
+		if (id.get() != other.id.get()) {
 			return false;
+		}
 		return true;
 	}
 }

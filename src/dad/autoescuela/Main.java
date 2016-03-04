@@ -12,10 +12,10 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
-		
+
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(Main.class.getResource("ui/MenuProfesor.fxml"));
-		
+
 		try {
 			Scene scene = new Scene(loader.load());
 			
