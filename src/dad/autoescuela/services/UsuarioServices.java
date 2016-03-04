@@ -21,8 +21,8 @@ public class UsuarioServices implements IUsuarioServices{
 			ResultSet rs = conexion.createStatement().executeQuery(consulta); 
 
             while(rs.next()){
-            	Usuario usuario = new Usuario();
             	
+            	Usuario usuario = new Usuario();
             	usuario.setNombre(rs.getString("nombre"));
             	usuario.setDni(rs.getString("dni"));
             	usuario.setProfesor(rs.getBoolean("profesor"));

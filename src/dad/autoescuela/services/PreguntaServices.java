@@ -55,8 +55,8 @@ public class PreguntaServices implements IPreguntaServices{
 			for (i = 0; i < preguntas.size() && preguntas.get(i).getId() != pregunta.getId(); i++);
 			
 			if (i == preguntas.size()) {
-				preguntas.add(pregunta);	
 				
+				preguntas.add(pregunta);	
 				addPregunta(pregunta);
 				
 				return true;

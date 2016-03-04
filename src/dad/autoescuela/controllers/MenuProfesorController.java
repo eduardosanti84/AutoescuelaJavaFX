@@ -4,6 +4,8 @@ import dad.autoescuela.Main;
 import dad.autoescuela.model.Pregunta;
 import dad.autoescuela.model.Usuario;
 import dad.autoescuela.services.ServiceLocator;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -13,6 +15,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
@@ -62,6 +65,8 @@ private Main main;
 	@FXML
 	private ImageView imagenPregunta;
 	
+	private String radioButtonSelected;
+	
 	@FXML
 	private void initialize(){
 		
@@ -107,11 +112,25 @@ private Main main;
 
 		////////////////////////////////////////////////////////////////////////////////////TODO FORMULARIO PREGUNTA /////
 		
+		
+		
 		final ToggleGroup grupoRB = new ToggleGroup();
 		rb1.setToggleGroup(grupoRB);
 		rb1.setSelected(true);
 		rb2.setToggleGroup(grupoRB);
 		rb3.setToggleGroup(grupoRB);
+		
+		grupoRB.selectedToggleProperty().addListener(new ChangeListener<Toggle>(){
+			public void changed(ObservableValue<? extends Toggle> ov, Toggle old_toggle, Toggle new_toggle) {
+
+	            if(rb1.isSelected())
+	            	radioButtonSelected = "1";
+	            if(rb1.isSelected())
+	            	radioButtonSelected = "2";
+	            if(rb1.isSelected())
+	            	radioButtonSelected = "3";
+		    }
+		});
 
 		
 		guardarPreguntaButton.onActionProperty().set(new EventHandler<ActionEvent>() {
@@ -122,7 +141,7 @@ private Main main;
 				pregunta.setPregunta1(pregunta1TextArea.getText());
 				pregunta.setPregunta2(pregunta2TextArea.getText());
 				pregunta.setPregunta3(pregunta3TextArea.getText());
-				pregunta.setRespuesta("1");
+				pregunta.setRespuesta(radioButtonSelected);
 				
 				if(ServiceLocator.getPreguntaServices().crearPregunta(pregunta)){
 					
