@@ -7,23 +7,23 @@ import javafx.beans.property.StringProperty;
 
 public class Pregunta {
 
-	private final IntegerProperty id = new SimpleIntegerProperty();
+	private final IntegerProperty idPregunta = new SimpleIntegerProperty();
 	private final StringProperty enunciado = new SimpleStringProperty();
 	private final StringProperty pregunta1 = new SimpleStringProperty();
 	private final StringProperty pregunta2 = new SimpleStringProperty();
 	private final StringProperty pregunta3 = new SimpleStringProperty();
 	private final StringProperty respuesta = new SimpleStringProperty();
 	
-	public final IntegerProperty idProperty() {
-		return this.id;
+	public final IntegerProperty idPreguntaProperty() {
+		return this.idPregunta;
 	}
 	
 	public final int getId() {
-		return this.idProperty().get();
+		return this.idPreguntaProperty().get();
 	}
 	
 	public final void setId(final int id) {
-		this.idProperty().set(id);
+		this.idPreguntaProperty().set(id);
 	}
 	
 	public final StringProperty enunciadoProperty() {
@@ -90,7 +90,7 @@ public class Pregunta {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id.getValue() == null) ? 0 : id.getValue().hashCode());
+		result = prime * result + ((idPregunta.getValue() == null) ? 0 : idPregunta.getValue().hashCode());
 		return result;
 	}
 
@@ -103,7 +103,7 @@ public class Pregunta {
 		if (getClass() != obj.getClass())
 			return false;
 		Pregunta other = (Pregunta) obj;
-		if (id.get() != other.id.get()) {
+		if (idPregunta.get() != other.idPregunta.get()) {
 			return false;
 		}
 		return true;

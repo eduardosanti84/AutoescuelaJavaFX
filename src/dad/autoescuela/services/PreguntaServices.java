@@ -1,12 +1,25 @@
 package dad.autoescuela.services;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-import dad.autoescuela.model.Pregunta;
+import javax.imageio.ImageIO;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import dad.autoescuela.model.Pregunta;
 
 public class PreguntaServices implements IPreguntaServices{
 
@@ -97,9 +110,9 @@ public class PreguntaServices implements IPreguntaServices{
 			
 		}catch(Exception e){  
 			e.printStackTrace();      
-		} 
+		}
 	}
-	
+
 	private void eliminarPreguntaDB(Pregunta pregunta) {
 		
 		PreparedStatement preparedStatement = null;
@@ -114,5 +127,109 @@ public class PreguntaServices implements IPreguntaServices{
 		}catch(Exception e){  
 			e.printStackTrace();      
 		} 
+	}
+	
+	private int tomarUltimaIdDB() {
+		
+		System.out.println(" y aqui");
+		
+		int id = -1;
+		try{ 
+			String consulta = "SELECT LAST_INSERT_ID() as id";    
+			ResultSet rs = conexion.createStatement().executeQuery(consulta); 
+			
+            while(rs.next()){
+            	id = rs.getInt("id");
+            }
+		}catch(Exception e){  
+			e.printStackTrace();      
+		} 
+		
+		return id;
+	}
+
+	//////////////////////////////////////////////////////////////////////////////////TODO METODOS DE DB PARA IMAGEN //////
+	public boolean guardarImagenDB(File imagenFile){
+		
+		if(imagenFile == null){
+			
+			//imagenFile = new File("file:" + Images.darURL(Images.NO_IMAGE));  //TODO dar imagen en ruta relativa
+		}
+		
+		int id_pregunta = tomarUltimaIdDB();
+		
+		conexion = ServiceLocator.getConexionServices().getConexion();
+		
+		String insert = "insert into Imagenes(nombre, imagen, id_pregunta) values (?, ?, ?)";
+		FileInputStream fis = null;
+		PreparedStatement ps = null;
+		try {
+			conexion.setAutoCommit(false);
+			
+			fis = new FileInputStream(imagenFile);
+			ps = conexion.prepareStatement(insert);
+			ps.setString(1, crearNombreImagen());
+			ps.setBinaryStream(2,fis,(int)imagenFile.length());
+			ps.setInt(3, id_pregunta);
+			ps.executeUpdate();
+			conexion.commit();
+			
+			return true;
+			
+		} catch (Exception e) {
+			e.printStackTrace(); 
+		}finally{
+			
+			try {
+				ps.close();
+				fis.close();
+			} catch (Exception e) {
+				e.printStackTrace(); 
+			}
+		}        
+		return false;
+	}
+	
+	private String crearNombreImagen(){
+		
+		String nombre;
+		
+		Date actual = new Date(System.currentTimeMillis());
+	    DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+	    nombre = df.format(actual);
+
+		return nombre;
+	}
+	
+	private BufferedImage leerImagenDB() {
+		//ArrayList<Imagen> lista = new ArrayList();
+		BufferedImage img = null;
+		try {
+			
+			String consulta = "SELECT imagen,nombre FROM Imagenes";    
+			ResultSet rs = conexion.createStatement().executeQuery(consulta); 
+
+			while (rs.next())
+			{
+				//Imagen imagen = new Imagen();
+				Blob blob = rs.getBlob("imagen");
+				String nombre = rs.getObject("nombre").toString();
+				byte[] datos = blob.getBytes(1, (int)blob.length());
+				
+				try {
+					img = ImageIO.read(new ByteArrayInputStream(datos));
+					
+				} catch (IOException e) {
+					e.printStackTrace();
+				}	
+				//imagen.setImagen(img);
+				//imagen.setNombre(nombre);
+			}
+			rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	
+		return img;
 	}
 }

@@ -16,6 +16,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -25,7 +26,6 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
-
 public class MenuProfesorController {
 
 @SuppressWarnings("unused")
@@ -54,6 +54,15 @@ private Main main;
 	private Button eliminarUsuarioButton;
 	
 	@FXML
+	private TableView<Pregunta> tablaPreguntas;
+	@FXML
+	private TableColumn<Pregunta, Number> idPreguntaColumn;
+	@FXML
+	private TableColumn<Pregunta, String> enunciadoColumn;
+	@FXML
+	private Button eliminarPreguntaButton;
+	
+	@FXML
 	private RadioButton rb1;
 	@FXML
 	private RadioButton rb2;
@@ -73,8 +82,9 @@ private Main main;
 	@FXML
 	private ImageView imagenPregunta;
 	
-	private String radioButtonSelected;
+	private String radioButtonSelected = "1";
 	private final FileChooser fileChooser = new FileChooser();
+	private File imagenFile;
 	
 	@FXML
 	private void initialize(){
@@ -127,22 +137,22 @@ private Main main;
 		
 		////////////////////////////////////////////////////////////////////////////////////TODO FORMULARIO PREGUNTA /////
 		
-		imagenPregunta.setImage(Images.INSERT_IMAGE);
+		imagenPregunta.setImage(Images.cargarIcono(Images.INSERT_IMAGE));
 		
 		imagenPregunta.onMouseClickedProperty().set(new EventHandler<Event>() {
 			public void handle(Event event) {
-				FileChooser fileChooser = new FileChooser();
+				
+				imagenFile = null;
 
                 fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("All Images", "*.*"));
                 fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JPG", "*.jpg"));
                 fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("BMP", "*.bmp"));
                 fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG", "*.png"));
                 
-                File file = fileChooser.showOpenDialog(null);
+                imagenFile = fileChooser.showOpenDialog(null);
                 
-                if(file != null)
-                	imagenPregunta.setImage(new Image(file.toURI().toString()));
-                //TODO imagen pa la saca
+                if(imagenFile != null)
+                	imagenPregunta.setImage(new Image(imagenFile.toURI().toString()));
 			}
 		});
 		
@@ -157,15 +167,17 @@ private Main main;
 
 	            if(rb1.isSelected())
 	            	radioButtonSelected = "1";
-	            if(rb1.isSelected())
+	            if(rb2.isSelected())
 	            	radioButtonSelected = "2";
-	            if(rb1.isSelected())
+	            if(rb3.isSelected())
 	            	radioButtonSelected = "3";
 		    }
 		});
 
 		guardarPreguntaButton.onActionProperty().set(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent arg0) {
+				
+				System.out.println(" el radio button indicado es : " + radioButtonSelected);
 				
 				Pregunta pregunta = new Pregunta();
 				pregunta.setEnunciado(enunciadoTextArea.getText());
@@ -175,13 +187,45 @@ private Main main;
 				pregunta.setRespuesta(radioButtonSelected);
 				
 				if(ServiceLocator.getPreguntaServices().crearPregunta(pregunta)){
+					
+					ServiceLocator.getPreguntaServices().guardarImagenDB(imagenFile);
 				}
 				else{
 				}
 			}
 		});
-	}
+		
+		///////////////////////////////////////////////////////////////////////////////////////////TODO VER PREGUNTAS /////
+		idPreguntaColumn.setCellValueFactory(cellData -> cellData.getValue().idPreguntaProperty());
+		enunciadoColumn.setCellValueFactory(cellData -> cellData.getValue().enunciadoProperty());
+
+		tablaPreguntas.setItems(ServiceLocator.getPreguntaServices().listarPreguntas());
+		
+		eliminarPreguntaButton.onActionProperty().set(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				Pregunta pregunta = tablaPreguntas.selectionModelProperty().get().getSelectedItem();
+				
+				if(ServiceLocator.getPreguntaServices().eliminarPregunta(pregunta)){
+				}
+				else{
+				}
+			}
+		});
+		
+		tablaPreguntas.setRowFactory( tv -> {
+		    TableRow<Pregunta> row = new TableRow<>();
+			    row.setOnMouseClicked(event -> {
+			        if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+			        	
+			        	Pregunta rowData = row.getItem();
 	
+			        	//TODO aqui tengo ya los datos de las preguntas
+			        }
+			    });
+		    return row ;
+		});
+	}
+
 	public void setMain(Main main) {
 		this.main = main;
 	}

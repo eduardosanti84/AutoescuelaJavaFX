@@ -1,5 +1,10 @@
 package dad.autoescuela.services;
 
-public interface IResultadoServices {
+import dad.autoescuela.model.Resultado;
+import javafx.collections.ObservableList;
 
+public interface IResultadoServices {
+	
+	public void crearResultado(Resultado resultado);
+	public ObservableList<Resultado> listarResultados();
 }
