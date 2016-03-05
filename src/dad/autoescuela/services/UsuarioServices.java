@@ -13,6 +13,7 @@ public class UsuarioServices implements IUsuarioServices{
 	private Connection conexion;
 	private ObservableList<Usuario> usuarios = FXCollections.observableArrayList();
 	
+	////////////////////////////////////////////////////////////////////////////////////////////////TODO CONSTRUCTOR //////
 	public UsuarioServices() {
 		conexion = ServiceLocator.getConexionServices().getConexion();
 		
@@ -33,12 +34,13 @@ public class UsuarioServices implements IUsuarioServices{
 			e.printStackTrace();      
 		}  
 	}
-	
+
+	///////////////////////////////////////////////////////////////////////////////////TODO METODOS PARA CONTROLADOR //////
 	@Override
 	public ObservableList<Usuario> listarUsuarios() {
 		return usuarios;
 	}
-
+	
 	@Override
 	public Boolean crearUsuario(Usuario usuario) {
 
@@ -55,7 +57,7 @@ public class UsuarioServices implements IUsuarioServices{
 			if (i == usuarios.size()) {
 				usuarios.add(usuario);	
 				
-				addUsuario(usuario);
+				crearUsuarioDB(usuario);
 				
 				return true;
 			}
@@ -64,11 +66,18 @@ public class UsuarioServices implements IUsuarioServices{
 	}
 	@Override
 	public Boolean eliminarUsuario(Usuario usuario) {
-		return null;
-	}
 
-	//////////////////////METODOS DB
-	private void addUsuario(Usuario usuario) {
+		if(usuarios.contains(usuario)){
+			
+			usuarios.remove(usuario);
+			eliminarUsuarioDB(usuario);
+			return true;
+		}
+		return false;
+	}
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////TODO METODOS DE DB //////
+	private void crearUsuarioDB(Usuario usuario) {
 		
 		PreparedStatement preparedStatement = null;
 		
@@ -81,6 +90,22 @@ public class UsuarioServices implements IUsuarioServices{
 			preparedStatement.setString(3, usuario.getPass());
 			preparedStatement.setBoolean(4, usuario.isProfesor());
 			
+			preparedStatement.executeUpdate();
+			
+		}catch(Exception e){  
+			e.printStackTrace();      
+		} 
+	}
+	
+	private void eliminarUsuarioDB(Usuario usuario) {
+		
+		PreparedStatement preparedStatement = null;
+		
+		try{ 
+			String consulta = "DELETE FROM usuarios WHERE dni LIKE ?";    
+			preparedStatement = conexion.prepareStatement(consulta);
+			
+			preparedStatement.setString(1, usuario.getDni());
 			preparedStatement.executeUpdate();
 			
 		}catch(Exception e){  

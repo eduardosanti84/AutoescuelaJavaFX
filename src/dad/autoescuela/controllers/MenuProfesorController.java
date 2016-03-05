@@ -1,12 +1,16 @@
 package dad.autoescuela.controllers;
 
+import java.io.File;
+
 import dad.autoescuela.Main;
 import dad.autoescuela.model.Pregunta;
 import dad.autoescuela.model.Usuario;
+import dad.autoescuela.resources.images.Images;
 import dad.autoescuela.services.ServiceLocator;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -18,7 +22,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.FileChooser;
 
 public class MenuProfesorController {
 
@@ -44,6 +50,8 @@ private Main main;
 	private TableColumn<Usuario, String> nombreColumn;
 	@FXML
 	private TableColumn<Usuario, Boolean> profesorColumn;
+	@FXML
+	private Button eliminarUsuarioButton;
 	
 	@FXML
 	private RadioButton rb1;
@@ -66,6 +74,7 @@ private Main main;
 	private ImageView imagenPregunta;
 	
 	private String radioButtonSelected;
+	private final FileChooser fileChooser = new FileChooser();
 	
 	@FXML
 	private void initialize(){
@@ -78,9 +87,8 @@ private Main main;
 			}
 			else
 				profesorButton.setText("NO");
-				
 		});
-
+		
 		guardarUsuarioButton.onActionProperty().set(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent arg0) {
 				
@@ -89,30 +97,54 @@ private Main main;
 				usuario.setDni(dniTextField.getText());
 				usuario.setPass(passwordTextField.getText());
 				usuario.setProfesor(profesorButton.isSelected());
-				
-				
+
 				if(ServiceLocator.getUsuarioServices().crearUsuario(usuario)){
-					
 				}
 				else{
-					
 				}
 			}
 		});
+		
 		///////////////////////////////////////////////////////////////////////////////////////////TODO VER USUARIOS /////
 		dniColumn.setCellValueFactory(cellData -> cellData.getValue().dniProperty());
 		nombreColumn.setCellValueFactory(cellData -> cellData.getValue().nombreProperty());
-		//passColumn.setCellValueFactory(cellData -> cellData.getValue().dniProperty());
 		profesorColumn.setCellValueFactory(cellData -> cellData.getValue().profesorProperty());
-		
 //		tablaUsuarios.getSelectionModel().selectedItemProperty().addListener(
 //	            (observable, oldValue, newValue) -> showUsuariosDetails(newValue));
 
 		tablaUsuarios.setItems(ServiceLocator.getUsuarioServices().listarUsuarios());
-
+		
+		eliminarUsuarioButton.onActionProperty().set(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				Usuario usuario = tablaUsuarios.selectionModelProperty().get().getSelectedItem();
+				
+				if(ServiceLocator.getUsuarioServices().eliminarUsuario(usuario)){
+				}
+				else{
+				}
+			}
+		});
+		
 		////////////////////////////////////////////////////////////////////////////////////TODO FORMULARIO PREGUNTA /////
 		
+		imagenPregunta.setImage(Images.INSERT_IMAGE);
 		
+		imagenPregunta.onMouseClickedProperty().set(new EventHandler<Event>() {
+			public void handle(Event event) {
+				FileChooser fileChooser = new FileChooser();
+
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("All Images", "*.*"));
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JPG", "*.jpg"));
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("BMP", "*.bmp"));
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG", "*.png"));
+                
+                File file = fileChooser.showOpenDialog(null);
+                
+                if(file != null)
+                	imagenPregunta.setImage(new Image(file.toURI().toString()));
+                //TODO imagen pa la saca
+			}
+		});
 		
 		final ToggleGroup grupoRB = new ToggleGroup();
 		rb1.setToggleGroup(grupoRB);
@@ -132,7 +164,6 @@ private Main main;
 		    }
 		});
 
-		
 		guardarPreguntaButton.onActionProperty().set(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent arg0) {
 				
@@ -144,10 +175,8 @@ private Main main;
 				pregunta.setRespuesta(radioButtonSelected);
 				
 				if(ServiceLocator.getPreguntaServices().crearPregunta(pregunta)){
-					
 				}
 				else{
-					
 				}
 			}
 		});

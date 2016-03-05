@@ -13,6 +13,7 @@ public class PreguntaServices implements IPreguntaServices{
 	private Connection conexion;
 	private ObservableList<Pregunta> preguntas = FXCollections.observableArrayList();
 	
+	////////////////////////////////////////////////////////////////////////////////////////////////TODO CONSTRUCTOR //////
 	public PreguntaServices(){
 		conexion = ServiceLocator.getConexionServices().getConexion();
 		
@@ -37,6 +38,7 @@ public class PreguntaServices implements IPreguntaServices{
 		}  
 	}
 	
+	///////////////////////////////////////////////////////////////////////////////////TODO METODOS PARA CONTROLADOR //////
 	@Override
 	public ObservableList<Pregunta> listarPreguntas() {
 		return preguntas;
@@ -67,26 +69,48 @@ public class PreguntaServices implements IPreguntaServices{
 	
 	@Override
 	public Boolean eliminarPregunta(Pregunta pregunta) {
-		return null;
+		if(preguntas.contains(pregunta)){
+			
+			preguntas.remove(pregunta);
+			eliminarPreguntaDB(pregunta);
+			return true;
+		}
+		return false;
 	}
-	
-	//////////////////////METODOS DB
+
+	//////////////////////////////////////////////////////////////////////////////////////////////TODO METODOS DE DB //////
 	private void addPregunta(Pregunta pregunta) {
 	
-	PreparedStatement preparedStatement = null;
+		PreparedStatement preparedStatement = null;
+		
+		try{ 
+			String consulta = "INSERT INTO preguntas(enunciado, pregunta1, pregunta2, pregunta3, respuesta) VALUES (?, ?, ?, ?, ?)";    
+			preparedStatement = conexion.prepareStatement(consulta);
+			
+			preparedStatement.setString(1, pregunta.getEnunciado());
+			preparedStatement.setString(2, pregunta.getPregunta1());
+			preparedStatement.setString(3, pregunta.getPregunta2());
+			preparedStatement.setString(4, pregunta.getPregunta3());
+			preparedStatement.setString(5, pregunta.getRespuesta());
+			
+			preparedStatement.executeUpdate();
+			
+		}catch(Exception e){  
+			e.printStackTrace();      
+		} 
+	}
 	
-	try{ 
-		String consulta = "INSERT INTO preguntas(enunciado, pregunta1, pregunta2, pregunta3, respuesta) VALUES (?, ?, ?, ?, ?)";    
-		preparedStatement = conexion.prepareStatement(consulta);
+	private void eliminarPreguntaDB(Pregunta pregunta) {
 		
-		preparedStatement.setString(1, pregunta.getEnunciado());
-		preparedStatement.setString(2, pregunta.getPregunta1());
-		preparedStatement.setString(3, pregunta.getPregunta2());
-		preparedStatement.setString(4, pregunta.getPregunta3());
-		preparedStatement.setString(5, pregunta.getRespuesta());
+		PreparedStatement preparedStatement = null;
 		
-		preparedStatement.executeUpdate();
-		
+		try{ 
+			String consulta = "DELETE FROM preguntas WHERE id = ?";    
+			preparedStatement = conexion.prepareStatement(consulta);
+			
+			preparedStatement.setInt(1, pregunta.getId());
+			preparedStatement.executeUpdate();
+			
 		}catch(Exception e){  
 			e.printStackTrace();      
 		} 

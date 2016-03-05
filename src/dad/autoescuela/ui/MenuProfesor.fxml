@@ -86,6 +86,13 @@
                            </columns>
                         </TableView>
                      </center>
+                     <bottom>
+                        <Button fx:id="eliminarUsuarioButton" mnemonicParsing="false" text="Eliminar usuario" BorderPane.alignment="CENTER_RIGHT">
+                           <BorderPane.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" />
+                           </BorderPane.margin>
+                        </Button>
+                     </bottom>
                   </BorderPane>
                </content>
             </Tab>
