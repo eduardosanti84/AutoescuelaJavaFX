@@ -3,6 +3,7 @@ package dad.autoescuela;
 import java.io.IOException;
 
 import dad.autoescuela.controllers.MenuAlumnoController;
+import dad.autoescuela.controllers.MenuLoginController;
 import dad.autoescuela.controllers.MenuProfesorController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -10,28 +11,32 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-
+	Stage stage;
+	
 	@Override
 	public void start(Stage primaryStage) {
-
+		stage = primaryStage;
 		FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(Main.class.getResource("ui/MenuProfesor.fxml"));
-		//loader.setLocation(Main.class.getResource("ui/MenuAlumno.fxml"));
+		loader.setLocation(Main.class.getResource("ui/MenuLogin.fxml"));
 		try {
 			Scene scene = new Scene(loader.load());
 			
-			MenuProfesorController menuProfesorController = loader.getController();
-			menuProfesorController.setMain(this);
+			MenuLoginController menuLoginController = loader.getController();
+			menuLoginController.setMain(this);
 			
 //			MenuAlumnoController menuAlumnoController = loader.getController();
 //			menuAlumnoController.setMain(this);
 			
-			primaryStage.setScene(scene);
-			primaryStage.show();
+			stage.setScene(scene);
+			stage.show();
 			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public Stage getStage() {
+		return stage;
 	}
 
 	public static void main(String[] args) {

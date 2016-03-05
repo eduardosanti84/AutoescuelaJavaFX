@@ -1,6 +1,7 @@
 package dad.autoescuela.controllers;
 
 import dad.autoescuela.Main;
+import dad.autoescuela.MainAlumno;
 import dad.autoescuela.model.Resultado;
 import dad.autoescuela.services.ServiceLocator;
 import javafx.event.ActionEvent;
@@ -15,7 +16,7 @@ import javafx.scene.control.TableView;
 public class MenuAlumnoController {
 
 	@SuppressWarnings("unused")
-	private Main main;
+	private MainAlumno main;
 
 	@FXML
 	private Button terminarTestButton;
@@ -80,7 +81,7 @@ public class MenuAlumnoController {
 		tablaResultados.setItems(ServiceLocator.getResultadoServices().listarResultados());
 	}
 
-	public void setMain(Main main) {
+	public void setMain(MainAlumno main) {
 		this.main = main;
 	}
 }

@@ -18,7 +18,7 @@ public class UsuarioServices implements IUsuarioServices{
 		conexion = ServiceLocator.getConexionServices().getConexion();
 		
 		try{ 
-			String consulta = "SELECT nombre, dni, profesor from usuarios";    
+			String consulta = "SELECT nombre, dni, pass, profesor from usuarios";    
 			ResultSet rs = conexion.createStatement().executeQuery(consulta); 
 
             while(rs.next()){
@@ -27,6 +27,7 @@ public class UsuarioServices implements IUsuarioServices{
             	usuario.setNombre(rs.getString("nombre"));
             	usuario.setDni(rs.getString("dni"));
             	usuario.setProfesor(rs.getBoolean("profesor"));
+            	usuario.setPass(rs.getString("pass"));
 
             	usuarios.add(usuario);
             }

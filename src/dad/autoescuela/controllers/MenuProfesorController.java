@@ -3,6 +3,7 @@ package dad.autoescuela.controllers;
 import java.io.File;
 
 import dad.autoescuela.Main;
+import dad.autoescuela.MainProfesor;
 import dad.autoescuela.model.Pregunta;
 import dad.autoescuela.model.Usuario;
 import dad.autoescuela.resources.images.Images;
@@ -29,7 +30,7 @@ import javafx.stage.FileChooser;
 public class MenuProfesorController {
 
 @SuppressWarnings("unused")
-private Main main;
+private MainProfesor main;
 	
 	@FXML
 	private ToggleButton profesorButton;
@@ -228,7 +229,7 @@ private Main main;
 		});
 	}
 
-	public void setMain(Main main) {
+	public void setMain(MainProfesor main) {
 		this.main = main;
 	}
 }
