@@ -5,13 +5,13 @@ public class ServiceLocator {
 	private static IConexionServices conexionServices;
 	private static IUsuarioServices usuarioServices;
 	private static IPreguntaServices preguntaServices;
-//	private static IResultadoServices resultadoServices;
+	private static IResultadoServices resultadoServices;
 	
 	static{
 		conexionServices = new ConexionServices();
 		usuarioServices = new UsuarioServices();
 		preguntaServices = new PreguntaServices();
-//		resultadoServices = new ResultadoServices();
+		resultadoServices = new ResultadoServices();
 	}
 
 	public static IConexionServices getConexionServices() {
@@ -23,7 +23,7 @@ public class ServiceLocator {
 	public static IPreguntaServices getPreguntaServices() {
 		return preguntaServices;
 	}
-//	public static IResultadoServices getResultadoServices() {
-//		return resultadoServices;
-//	}
+	public static IResultadoServices getResultadoServices() {
+		return resultadoServices;
+	}
 }

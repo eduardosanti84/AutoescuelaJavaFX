@@ -21,7 +21,7 @@ public class ResultadoServices implements IResultadoServices {
 			//Este muestra todos los resultados de todos los alumnos. Lo pongo para probar que se muestra bien y
 			//porque aun no tienes la clase ConexionService modificada. Mañana si soluciono el error te lo paso todo
 			
-			String consulta = "SELECT alumno_dni, aciertos, fallos, total FROM resultados?";
+			String consulta = "SELECT alumno_dni, aciertos, fallos, total FROM resultados";
 			PreparedStatement ps = conexion.prepareStatement(consulta);
 			
 //			Esto muestra solamente los resultados del alumno que se ha logeado. Para ello tenemos que añadir
@@ -55,7 +55,7 @@ public class ResultadoServices implements IResultadoServices {
 	public void crearResultado(Resultado resultado) {
 		resultados.add(resultado);
 		
-		String consulta = "INSERT INTO resultados (alumno_dni, aciertos, fallos, total) VALUES (?, ?, ?, ?)?";
+		String consulta = "INSERT INTO resultados (alumno_dni, aciertos, fallos, total) VALUES (?, ?, ?, ?)";
 		try {
 			PreparedStatement ps = conexion.prepareStatement(consulta);
 			ps.setString(1, resultado.getAlumno_dni());

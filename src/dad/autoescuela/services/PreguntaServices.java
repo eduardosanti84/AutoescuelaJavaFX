@@ -20,6 +20,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import dad.autoescuela.model.Pregunta;
+import dad.autoescuela.resources.images.Images;
 
 public class PreguntaServices implements IPreguntaServices{
 
@@ -97,14 +98,23 @@ public class PreguntaServices implements IPreguntaServices{
 		PreparedStatement preparedStatement = null;
 		
 		try{ 
-			String consulta = "INSERT INTO preguntas(enunciado, pregunta1, pregunta2, pregunta3, respuesta) VALUES (?, ?, ?, ?, ?)";    
+			String consulta = "INSERT INTO preguntas(enunciado, pregunta1, pregunta2, pregunta3, respuesta, imagen) VALUES (?, ?, ?, ?, ?, ?)";    
 			preparedStatement = conexion.prepareStatement(consulta);
+			
+			if(pregunta.getImagen() != null){
+				FileInputStream fis = new FileInputStream(pregunta.getImagen());
+				preparedStatement.setBinaryStream(6, fis,(int)pregunta.getImagen().length());
+			}
+			else{
+				preparedStatement.setBinaryStream(6, null);
+			}
 			
 			preparedStatement.setString(1, pregunta.getEnunciado());
 			preparedStatement.setString(2, pregunta.getPregunta1());
 			preparedStatement.setString(3, pregunta.getPregunta2());
 			preparedStatement.setString(4, pregunta.getPregunta3());
 			preparedStatement.setString(5, pregunta.getRespuesta());
+			
 			
 			preparedStatement.executeUpdate();
 			
@@ -129,107 +139,54 @@ public class PreguntaServices implements IPreguntaServices{
 		} 
 	}
 	
-	private int tomarUltimaIdDB() {
-		
-		System.out.println(" y aqui");
-		
-		int id = -1;
-		try{ 
-			String consulta = "SELECT LAST_INSERT_ID() as id";    
-			ResultSet rs = conexion.createStatement().executeQuery(consulta); 
-			
-            while(rs.next()){
-            	id = rs.getInt("id");
-            }
-		}catch(Exception e){  
-			e.printStackTrace();      
-		} 
-		
-		return id;
-	}
+//	private int tomarUltimaIdDB() {
+//		
+//		System.out.println(" y aqui");
+//		
+//		int id = -1;
+//		try{ 
+//			String consulta = "SELECT LAST_INSERT_ID() as id";    
+//			ResultSet rs = conexion.createStatement().executeQuery(consulta); 
+//			
+//            while(rs.next()){
+//            	id = rs.getInt("id");
+//            }
+//		}catch(Exception e){  
+//			e.printStackTrace();      
+//		} 
+//		
+//		return id;
+//	}
 
 	//////////////////////////////////////////////////////////////////////////////////TODO METODOS DE DB PARA IMAGEN //////
-	public boolean guardarImagenDB(File imagenFile){
-		
-		if(imagenFile == null){
-			
-			//imagenFile = new File("file:" + Images.darURL(Images.NO_IMAGE));  //TODO dar imagen en ruta relativa
-		}
-		
-		int id_pregunta = tomarUltimaIdDB();
-		
-		conexion = ServiceLocator.getConexionServices().getConexion();
-		
-		String insert = "insert into Imagenes(nombre, imagen, id_pregunta) values (?, ?, ?)";
-		FileInputStream fis = null;
-		PreparedStatement ps = null;
-		try {
-			conexion.setAutoCommit(false);
-			
-			fis = new FileInputStream(imagenFile);
-			ps = conexion.prepareStatement(insert);
-			ps.setString(1, crearNombreImagen());
-			ps.setBinaryStream(2,fis,(int)imagenFile.length());
-			ps.setInt(3, id_pregunta);
-			ps.executeUpdate();
-			conexion.commit();
-			
-			return true;
-			
-		} catch (Exception e) {
-			e.printStackTrace(); 
-		}finally{
-			
-			try {
-				ps.close();
-				fis.close();
-			} catch (Exception e) {
-				e.printStackTrace(); 
-			}
-		}        
-		return false;
-	}
-	
-	private String crearNombreImagen(){
-		
-		String nombre;
-		
-		Date actual = new Date(System.currentTimeMillis());
-	    DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
-	    nombre = df.format(actual);
-
-		return nombre;
-	}
-	
-	private BufferedImage leerImagenDB() {
-		//ArrayList<Imagen> lista = new ArrayList();
-		BufferedImage img = null;
-		try {
-			
-			String consulta = "SELECT imagen,nombre FROM Imagenes";    
-			ResultSet rs = conexion.createStatement().executeQuery(consulta); 
-
-			while (rs.next())
-			{
-				//Imagen imagen = new Imagen();
-				Blob blob = rs.getBlob("imagen");
-				String nombre = rs.getObject("nombre").toString();
-				byte[] datos = blob.getBytes(1, (int)blob.length());
-				
-				try {
-					img = ImageIO.read(new ByteArrayInputStream(datos));
-					
-				} catch (IOException e) {
-					e.printStackTrace();
-				}	
-				//imagen.setImagen(img);
-				//imagen.setNombre(nombre);
-			}
-			rs.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	
-		return img;
-	}
+//	
+//	private BufferedImage leerImagenDB() {
+//		BufferedImage img = null;
+//		try {
+//			
+//			String consulta = "SELECT imagen FROM preguntas";    
+//			ResultSet rs = conexion.createStatement().executeQuery(consulta); 
+//
+//			while (rs.next())
+//			{
+//				//Imagen imagen = new Imagen();
+//				Blob blob = rs.getBlob("imagen");
+//				byte[] datos = blob.getBytes(1, (int)blob.length());
+//				
+//				try {
+//					img = ImageIO.read(new ByteArrayInputStream(datos));
+//					
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}	
+//				//imagen.setImagen(img);
+//				//imagen.setNombre(nombre);
+//			}
+//			rs.close();
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//	
+//		return img;
+//	}
 }

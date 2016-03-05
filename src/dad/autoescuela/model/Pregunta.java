@@ -1,7 +1,11 @@
 package dad.autoescuela.model;
 
+import java.io.File;
+
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -13,6 +17,7 @@ public class Pregunta {
 	private final StringProperty pregunta2 = new SimpleStringProperty();
 	private final StringProperty pregunta3 = new SimpleStringProperty();
 	private final StringProperty respuesta = new SimpleStringProperty();
+	private final ObjectProperty<File> imagen = new SimpleObjectProperty<File>();
 	
 	public final IntegerProperty idPreguntaProperty() {
 		return this.idPregunta;
@@ -84,6 +89,18 @@ public class Pregunta {
 	
 	public final void setRespuesta(final java.lang.String respuesta) {
 		this.respuestaProperty().set(respuesta);
+	}
+	
+	public final ObjectProperty<File> imagenProperty() {
+		return this.imagen;
+	}
+	
+	public final java.io.File getImagen() {
+		return this.imagenProperty().get();
+	}
+
+	public final void setImagen(final java.io.File imagen) {
+		this.imagenProperty().set(imagen);
 	}
 
 	@Override

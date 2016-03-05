@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import dad.autoescuela.model.Usuario;
+
 public class ConexionServices implements IConexionServices {
 
 	private static Connection conexion; 
@@ -11,13 +13,15 @@ public class ConexionServices implements IConexionServices {
 	private static final String USER = "root";
 	private static final String PASS = "";
 	
+	private static Usuario usuario;
+	
 	public ConexionServices() {
 		conectar();
 	}
 	
 	@Override
 	public boolean conectar() {
-		try{  
+		try{ 
 			Class.forName("com.mysql.jdbc.Driver").newInstance();  
 			conexion = DriverManager.getConnection(URL, USER, PASS);  
 			return true;

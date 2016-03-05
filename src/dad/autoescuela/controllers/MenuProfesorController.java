@@ -84,7 +84,7 @@ private Main main;
 	
 	private String radioButtonSelected = "1";
 	private final FileChooser fileChooser = new FileChooser();
-	private File imagenFile;
+	private File imagenFile = null;
 	
 	@FXML
 	private void initialize(){
@@ -137,12 +137,12 @@ private Main main;
 		
 		////////////////////////////////////////////////////////////////////////////////////TODO FORMULARIO PREGUNTA /////
 		
-		imagenPregunta.setImage(Images.cargarIcono(Images.INSERT_IMAGE));
+		imagenPregunta.setImage(Images.INSERT_IMAGE);
 		
 		imagenPregunta.onMouseClickedProperty().set(new EventHandler<Event>() {
 			public void handle(Event event) {
 				
-				imagenFile = null;
+				//imagenFile = null;
 
                 fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("All Images", "*.*"));
                 fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JPG", "*.jpg"));
@@ -185,10 +185,12 @@ private Main main;
 				pregunta.setPregunta2(pregunta2TextArea.getText());
 				pregunta.setPregunta3(pregunta3TextArea.getText());
 				pregunta.setRespuesta(radioButtonSelected);
+				pregunta.setImagen(imagenFile);
 				
 				if(ServiceLocator.getPreguntaServices().crearPregunta(pregunta)){
 					
-					ServiceLocator.getPreguntaServices().guardarImagenDB(imagenFile);
+//					if(imagenFile != null)
+//						ServiceLocator.getPreguntaServices().guardarImagenDB(imagenFile);
 				}
 				else{
 				}
