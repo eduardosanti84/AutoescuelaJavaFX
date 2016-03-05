@@ -1,7 +1,5 @@
 package dad.autoescuela.services;
 
-import java.io.File;
-
 import dad.autoescuela.model.Pregunta;
 import javafx.collections.ObservableList;
 
