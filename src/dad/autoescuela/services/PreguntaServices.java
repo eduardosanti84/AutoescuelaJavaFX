@@ -59,7 +59,7 @@ public class PreguntaServices implements IPreguntaServices{
 			if (i == preguntas.size()) {
 				
 				preguntas.add(pregunta);	
-				addPregunta(pregunta);
+				crearPreguntaDB(pregunta);
 				
 				return true;
 			}
@@ -79,7 +79,7 @@ public class PreguntaServices implements IPreguntaServices{
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////TODO METODOS DE DB //////
-	private void addPregunta(Pregunta pregunta) {
+	private void crearPreguntaDB(Pregunta pregunta) {
 	
 		PreparedStatement preparedStatement = null;
 		
