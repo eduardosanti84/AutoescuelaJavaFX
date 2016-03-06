@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dad.autoescuela.Main;
-import dad.autoescuela.MainAlumno;
-import dad.autoescuela.MainProfesor;
 import dad.autoescuela.model.Usuario;
 import dad.autoescuela.services.ServiceLocator;
 import javafx.event.ActionEvent;
@@ -24,7 +22,6 @@ import javafx.stage.StageStyle;
 
 public class MenuLoginController {
 	
-	@SuppressWarnings("unused")
 	private Main main;
 	
 	@FXML
@@ -36,7 +33,9 @@ public class MenuLoginController {
 
 	@FXML
 	private void initialize() {
-
+		
+		usuarioTextField.setText("7856020A");
+		passwordField.setText("1234789");
 		///////////////////////////////////////////////////////////////////////////////////// TODO
 		///////////////////////////////////////////////////////////////////////////////////// FORMULARIO
 		///////////////////////////////////////////////////////////////////////////////////// USUARIO

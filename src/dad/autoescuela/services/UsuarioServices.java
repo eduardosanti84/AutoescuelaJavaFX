@@ -18,7 +18,7 @@ public class UsuarioServices implements IUsuarioServices{
 		conexion = ServiceLocator.getConexionServices().getConexion();
 		
 		try{ 
-			String consulta = "SELECT nombre, dni, pass, profesor from usuarios";    
+			String consulta = "SELECT * from usuarios";    
 			ResultSet rs = conexion.createStatement().executeQuery(consulta); 
 
             while(rs.next()){
@@ -56,8 +56,8 @@ public class UsuarioServices implements IUsuarioServices{
 			for (i = 0; i < usuarios.size() && !usuarios.get(i).getDni().equals(usuario.getDni()); i++);
 			
 			if (i == usuarios.size()) {
-				usuarios.add(usuario);	
 				
+				usuarios.add(usuario);	
 				crearUsuarioDB(usuario);
 				
 				return true;

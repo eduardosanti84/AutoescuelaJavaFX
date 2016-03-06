@@ -1,6 +1,5 @@
 package dad.autoescuela.controllers;
 
-import dad.autoescuela.Main;
 import dad.autoescuela.MainAlumno;
 import dad.autoescuela.model.Resultado;
 import dad.autoescuela.services.ServiceLocator;

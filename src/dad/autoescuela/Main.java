@@ -2,9 +2,7 @@ package dad.autoescuela;
 
 import java.io.IOException;
 
-import dad.autoescuela.controllers.MenuAlumnoController;
 import dad.autoescuela.controllers.MenuLoginController;
-import dad.autoescuela.controllers.MenuProfesorController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -23,9 +21,6 @@ public class Main extends Application {
 			
 			MenuLoginController menuLoginController = loader.getController();
 			menuLoginController.setMain(this);
-			
-//			MenuAlumnoController menuAlumnoController = loader.getController();
-//			menuAlumnoController.setMain(this);
 			
 			stage.setScene(scene);
 			stage.show();

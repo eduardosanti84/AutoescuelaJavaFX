@@ -1,26 +1,14 @@
 package dad.autoescuela.services;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
-import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import javax.imageio.ImageIO;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import dad.autoescuela.model.Pregunta;
-import dad.autoescuela.resources.images.Images;
 
 public class PreguntaServices implements IPreguntaServices{
 
@@ -59,7 +47,7 @@ public class PreguntaServices implements IPreguntaServices{
 	}
 	
 	public Boolean crearPregunta(Pregunta pregunta) {
-
+		
 		if(!preguntas.contains(pregunta)){
 			for(int i = 0; i < preguntas.size(); i++){
 				if(preguntas.get(i).getId() == pregunta.getId()){
@@ -138,55 +126,4 @@ public class PreguntaServices implements IPreguntaServices{
 			e.printStackTrace();      
 		} 
 	}
-	
-//	private int tomarUltimaIdDB() {
-//		
-//		System.out.println(" y aqui");
-//		
-//		int id = -1;
-//		try{ 
-//			String consulta = "SELECT LAST_INSERT_ID() as id";    
-//			ResultSet rs = conexion.createStatement().executeQuery(consulta); 
-//			
-//            while(rs.next()){
-//            	id = rs.getInt("id");
-//            }
-//		}catch(Exception e){  
-//			e.printStackTrace();      
-//		} 
-//		
-//		return id;
-//	}
-
-	//////////////////////////////////////////////////////////////////////////////////TODO METODOS DE DB PARA IMAGEN //////
-//	
-//	private BufferedImage leerImagenDB() {
-//		BufferedImage img = null;
-//		try {
-//			
-//			String consulta = "SELECT imagen FROM preguntas";    
-//			ResultSet rs = conexion.createStatement().executeQuery(consulta); 
-//
-//			while (rs.next())
-//			{
-//				//Imagen imagen = new Imagen();
-//				Blob blob = rs.getBlob("imagen");
-//				byte[] datos = blob.getBytes(1, (int)blob.length());
-//				
-//				try {
-//					img = ImageIO.read(new ByteArrayInputStream(datos));
-//					
-//				} catch (IOException e) {
-//					e.printStackTrace();
-//				}	
-//				//imagen.setImagen(img);
-//				//imagen.setNombre(nombre);
-//			}
-//			rs.close();
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//	
-//		return img;
-//	}
 }
