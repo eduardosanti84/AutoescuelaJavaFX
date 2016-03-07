@@ -1,5 +1,7 @@
 package dad.autoescuela.services;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -9,9 +11,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import javax.imageio.ImageIO;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
 import dad.autoescuela.model.Pregunta;
 
 public class PreguntaServices implements IPreguntaServices{
@@ -38,24 +43,10 @@ public class PreguntaServices implements IPreguntaServices{
             	pregunta.setRespuesta(rs.getString("respuesta"));
 
             	Blob blob = rs.getBlob("imagen");
-				File ruta = new File(System.getProperty("user.home") + "\\.Autoescuela\\Imagenes");
-				if(!ruta.exists())
-					ruta.mkdirs();
-				if (blob != null) {
-					InputStream is = blob.getBinaryStream();
-					File imagen = new File(System.getProperty("user.home") + "\\.Autoescuela\\Imagenes\\" + blob.hashCode() + ".png");
-					if(!imagen.exists()){
-						FileOutputStream fos = new FileOutputStream(imagen);
-
-						int b = 0;
-						while ((b = is.read()) != -1) {
-							fos.write(b);
-						}
-					}
-					pregunta.setImagen(imagen);
-				} else {
-					pregunta.setImagen(null);
-				}
+            	if (blob != null) {
+            		pregunta.setImagen(new Image(blob.getBinaryStream()));
+            	}
+            	
             	preguntas.add(pregunta);
             }
 		}catch(Exception e){  
@@ -125,8 +116,11 @@ public class PreguntaServices implements IPreguntaServices{
 			preparedStatement = conexion.prepareStatement(consulta);
 			
 			if(pregunta.getImagen() != null){
-				FileInputStream fis = new FileInputStream(pregunta.getImagen());
-				preparedStatement.setBinaryStream(6, fis,(int)pregunta.getImagen().length());
+				BufferedImage bImage = SwingFXUtils.fromFXImage(pregunta.getImagen(), null);
+				ByteArrayOutputStream bContent = new ByteArrayOutputStream();
+				ImageIO.write(bImage, "png", bContent);
+				byte [] contenido = bContent.toByteArray(); 
+				preparedStatement.setBytes(6, contenido);
 			}
 			else{
 				preparedStatement.setBinaryStream(6, null);

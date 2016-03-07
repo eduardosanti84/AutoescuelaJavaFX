@@ -2,7 +2,7 @@ package dad.autoescuela.controllers;
 
 import java.io.File;
 
-import dad.autoescuela.MainProfesor;
+import dad.autoescuela.Main;
 import dad.autoescuela.model.Pregunta;
 import dad.autoescuela.model.Usuario;
 import dad.autoescuela.resources.images.Images;
@@ -37,7 +37,7 @@ import javafx.util.Callback;
 public class MenuProfesorController {
 
 @SuppressWarnings("unused")
-private MainProfesor main;
+private Main main;
 	
 	@FXML
 	private ToggleButton profesorButton;
@@ -111,7 +111,8 @@ private MainProfesor main;
 		
 		desconectarButton.onActionProperty().set(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
-				
+				main.getStage().close();
+				main.getPrimaryStage().show();
 				
 			}
 		});
@@ -256,7 +257,7 @@ private MainProfesor main;
 					pregunta.setPregunta2(pregunta2TextArea.getText());
 					pregunta.setPregunta3(pregunta3TextArea.getText());
 					pregunta.setRespuesta(radioButtonSelected);
-					pregunta.setImagen(imagenFile);
+					pregunta.setImagen(new Image(imagenFile.toURI().toString()));
 					
 					if(ServiceLocator.getPreguntaServices().crearPregunta(pregunta)){
 						Utils.mensaje(AlertType.INFORMATION, "Correcto", "Se ha creado la pregunta", "La pregunta se ha creado correctamente!");
@@ -324,7 +325,7 @@ private MainProfesor main;
 		imagenFile = null;
 	}
 
-	public void setMain(MainProfesor main) {
+	public void setMain(Main main) {
 		this.main = main;
 	}
 }
