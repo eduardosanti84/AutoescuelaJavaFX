@@ -1,6 +1,10 @@
 package dad.autoescuela.services;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -33,6 +37,25 @@ public class PreguntaServices implements IPreguntaServices{
             	pregunta.setPregunta3(rs.getString("pregunta3"));
             	pregunta.setRespuesta(rs.getString("respuesta"));
 
+            	Blob blob = rs.getBlob("imagen");
+				File ruta = new File(System.getProperty("user.home") + "\\.Autoescuela\\Imagenes");
+				if(!ruta.exists())
+					ruta.mkdirs();
+				if (blob != null) {
+					InputStream is = blob.getBinaryStream();
+					File imagen = new File(System.getProperty("user.home") + "\\.Autoescuela\\Imagenes\\" + blob.hashCode() + ".png");
+					if(!imagen.exists()){
+						FileOutputStream fos = new FileOutputStream(imagen);
+
+						int b = 0;
+						while ((b = is.read()) != -1) {
+							fos.write(b);
+						}
+					}
+					pregunta.setImagen(imagen);
+				} else {
+					pregunta.setImagen(null);
+				}
             	preguntas.add(pregunta);
             }
 		}catch(Exception e){  
@@ -49,24 +72,28 @@ public class PreguntaServices implements IPreguntaServices{
 	public Boolean crearPregunta(Pregunta pregunta) {
 		
 		if(!preguntas.contains(pregunta)){
-			for(int i = 0; i < preguntas.size(); i++){
-				if(preguntas.get(i).getId() == pregunta.getId()){
-					break;
-				}
-			}
-			
-			int i;
-			for (i = 0; i < preguntas.size() && preguntas.get(i).getId() != pregunta.getId(); i++);
-			
-			if (i == preguntas.size()) {
+//			for(int i = 0; i < preguntas.size(); i++){
+//				if(preguntas.get(i).getId() == pregunta.getId()){
+//					break;
+//				}
+//			}
+//			
+//			int i;
+//			for (i = 0; i < preguntas.size() && preguntas.get(i).getId() != pregunta.getId(); i++);
+//			
+//			if (i == preguntas.size()) {
 				
-				preguntas.add(pregunta);	
+					
 				crearPreguntaDB(pregunta);
+				//al insertar ya tenemos la id, la necesitamos para rellenar en la lista observable y luego ne el tableview
+				pregunta.setId(tomarUltimaIdDB());
+				preguntas.add(pregunta);
 				
 				return true;
-			}
+//			}
 		}
-		return false;
+		else
+			return false;
 	}
 	
 	@Override
@@ -75,6 +102,14 @@ public class PreguntaServices implements IPreguntaServices{
 			
 			preguntas.remove(pregunta);
 			eliminarPreguntaDB(pregunta);
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean comprobarRespuesta(Pregunta pregunta, String respuesta) {
+		if (pregunta.getRespuesta().equals(respuesta)) {
 			return true;
 		}
 		return false;
@@ -125,5 +160,22 @@ public class PreguntaServices implements IPreguntaServices{
 		}catch(Exception e){  
 			e.printStackTrace();      
 		} 
+	}
+	
+	private int tomarUltimaIdDB() {
+		
+		int id = -1;
+		try{ 
+			String consulta = "SELECT LAST_INSERT_ID() as id";    
+			ResultSet rs = conexion.createStatement().executeQuery(consulta); 
+			
+            while(rs.next()){
+            	id = rs.getInt("id");
+            }
+		}catch(Exception e){  
+			e.printStackTrace();      
+		} 
+		
+		return id;
 	}
 }

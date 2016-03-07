@@ -6,6 +6,7 @@ import java.util.List;
 
 import dad.autoescuela.Main;
 import dad.autoescuela.model.Usuario;
+import dad.autoescuela.resources.images.Images;
 import dad.autoescuela.services.ServiceLocator;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -16,12 +17,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class MenuLoginController {
 	
+	@SuppressWarnings("unused")
 	private Main main;
 	
 	@FXML
@@ -30,19 +33,27 @@ public class MenuLoginController {
 	private TextField usuarioTextField;
 	@FXML
 	private PasswordField passwordField;
+	
+	@FXML
+	private ImageView logo;
+	
+	public static Usuario usuario;
 
 	@FXML
 	private void initialize() {
 		
-		usuarioTextField.setText("7856020A");
-		passwordField.setText("1234789");
+		usuarioTextField.setPromptText("Usuario(DNI)");
+		passwordField.setPromptText("Contraseña");
+		
+		logo.setImage(Images.LOGO_IMAGE);
+
 		///////////////////////////////////////////////////////////////////////////////////// TODO
 		///////////////////////////////////////////////////////////////////////////////////// FORMULARIO
 		///////////////////////////////////////////////////////////////////////////////////// USUARIO
 		///////////////////////////////////////////////////////////////////////////////////// /////
 		conectarButton.onActionProperty().set(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent arg0) {
-				Usuario usuario = new Usuario();
+				usuario = new Usuario();
 				usuario.setDni(usuarioTextField.getText());
 				usuario.setPass(passwordField.getText());
 				
@@ -55,6 +66,7 @@ public class MenuLoginController {
 				}
 				else{
 					if(usuario.getPass().equals(usuarios.get(i).getPass())){
+						ServiceLocator.getConexionServices().setUsuario(usuario);
 						if(usuarios.get(i).isProfesor()){
 							FXMLLoader loader = new FXMLLoader();
 							loader.setLocation(Main.class.getResource("ui/MenuProfesor.fxml"));

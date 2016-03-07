@@ -10,6 +10,7 @@ public class Images {
 	public static final Image NO_IMAGE = cargarIcono("sinImagen.jpg");
 	public static final Image CORRECT_IMAGE = cargarIcono("correcto.png");
 	public static final Image INCORRECT_IMAGE = cargarIcono("incorrecto.png");
+	public static final Image LOGO_IMAGE = cargarIcono("logoNY.png");
 	
 	public static Image cargarIcono(String nombre){
 		String ruta = RAIZ + nombre;

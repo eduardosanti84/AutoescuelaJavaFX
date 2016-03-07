@@ -45,4 +45,14 @@ public class ConexionServices implements IConexionServices {
 			e.printStackTrace();
 		}
 	}
+	
+	@Override
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	@Override
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
 }

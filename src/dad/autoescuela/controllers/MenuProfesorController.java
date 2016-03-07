@@ -1,7 +1,6 @@
 package dad.autoescuela.controllers;
 
 import java.io.File;
-import java.util.Optional;
 
 import dad.autoescuela.MainProfesor;
 import dad.autoescuela.model.Pregunta;
@@ -16,11 +15,8 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -31,10 +27,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
@@ -94,11 +90,31 @@ private MainProfesor main;
 	@FXML
 	private ImageView imagenPregunta;
 	
+	@FXML
+	private StackPane banner;
+	@FXML
+	private Button desconectarButton;
+	
 	private String radioButtonSelected = "1";
 	private File imagenFile = null;
 	
 	@FXML
 	private void initialize(){
+
+		///////////////////////////////////////////////////////////////////////////////////////////////TODO CABECERA /////
+		banner.setStyle(
+	            "-fx-background-image: url(" +
+	                    "'/dad/autoescuela/resources/images/bannerNY.png'" +
+	                "); " +
+	                "-fx-background-size: stretch;"
+	            );
+		
+		desconectarButton.onActionProperty().set(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				
+				
+			}
+		});
 		
 		/////////////////////////////////////////////////////////////////////////////////////TODO FORMULARIO USUARIO /////
 		profesorButton.selectedProperty().addListener((obs, oldValue, newValue) -> {
@@ -181,9 +197,9 @@ private MainProfesor main;
 				{
 					Usuario usuario = tablaUsuarios.selectionModelProperty().get().getSelectedItem();
 					
-					if(ServiceLocator.getUsuarioServices().eliminarUsuario(usuario))
-						Utils.mensaje(AlertType.INFORMATION, "Correcto", "Se ha eliminado al usuario", "");
-					else  
+					if(!ServiceLocator.getUsuarioServices().eliminarUsuario(usuario))
+						//Utils.mensaje(AlertType.INFORMATION, "Correcto", "Se ha eliminado al usuario", "");
+					//else  
 						Utils.mensaje(AlertType.ERROR, "Error", "Error al eliminar", "Ha ocurrido un error al eliminar el usuario, contacta con el administrador!");
 				}
 			}
@@ -267,9 +283,9 @@ private MainProfesor main;
 				{
 					Pregunta pregunta = tablaPreguntas.selectionModelProperty().get().getSelectedItem();
 					
-					if(ServiceLocator.getPreguntaServices().eliminarPregunta(pregunta))
-						Utils.mensaje(AlertType.INFORMATION, "Correcto", "Se ha eliminado la pregunta", "");
-					else  
+					if(!ServiceLocator.getPreguntaServices().eliminarPregunta(pregunta))
+						//Utils.mensaje(AlertType.INFORMATION, "Correcto", "Se ha eliminado la pregunta", "");
+					//else  
 						Utils.mensaje(AlertType.ERROR, "Error", "Error al eliminar", "Ha ocurrido un error al eliminar la pregunta, contacta con el administrador!"); 
 				}
 			}
@@ -307,8 +323,6 @@ private MainProfesor main;
 		imagenPregunta.setImage(Images.INSERT_IMAGE);
 		imagenFile = null;
 	}
-	
-	
 
 	public void setMain(MainProfesor main) {
 		this.main = main;

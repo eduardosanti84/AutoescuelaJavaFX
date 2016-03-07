@@ -5,7 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import dad.autoescuela.controllers.MenuLoginController;
 import dad.autoescuela.model.Resultado;
+import dad.autoescuela.model.Usuario;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -17,21 +19,13 @@ public class ResultadoServices implements IResultadoServices {
 	public ResultadoServices(){
 		conexion = ServiceLocator.getConexionServices().getConexion();
 		
-		try{ 
-			//Este muestra todos los resultados de todos los alumnos. Lo pongo para probar que se muestra bien y
-			//porque aun no tienes la clase ConexionService modificada. Mañana si soluciono el error te lo paso todo
-			
-			String consulta = "SELECT alumno_dni, aciertos, fallos, total FROM resultados";
+		try{ 			
+			String consulta = "SELECT alumno_dni, aciertos, fallos, total FROM resultados WHERE alumno_dni = ?";
 			PreparedStatement ps = conexion.prepareStatement(consulta);
 			
-//			Esto muestra solamente los resultados del alumno que se ha logeado. Para ello tenemos que añadir
-//			un atributo Usuario en el ConexionService.
-			
-			
-//			String consulta = "SELECT alumno_dni, aciertos, fallos, total FROM resultados WHERE alumno_dni = ?";
-//			PreparedStatement ps = conexion.prepareStatement(consulta);
-//			
-//			ps.setString(1, ServiceLocator.getConexionServices().getUsuario().getDni());
+			if(ServiceLocator.getConexionServices().getUsuario() == null)
+				ServiceLocator.getConexionServices().conectar();
+			ps.setString(1, MenuLoginController.usuario.getDni());
 			
 			ResultSet rs = ps.executeQuery();
 
@@ -44,11 +38,10 @@ public class ResultadoServices implements IResultadoServices {
 	            resultado.setTotal(rs.getInt("total"));
             	
 	            resultados.add(resultado);
-            }
+           }
 		}catch(Exception e){  
 			e.printStackTrace();      
 		}
-		
 	}
 	
 	@Override
