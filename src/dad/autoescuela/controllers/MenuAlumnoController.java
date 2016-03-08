@@ -30,17 +30,13 @@ public class MenuAlumnoController {
 	private Usuario usuarioActual;
 	private List<Pregunta> preguntasTest;
 	private List<Respuesta> respuestasTest;
-//	private int aciertos;
-//	private int fallos;
 	private int tamTotalTest;
 	private int posicionActual;
-
-	@FXML
-	private Button terminarTestButton;
-	@FXML
-	private Button continuarTestButton;
+	
 	@FXML
 	private Button aceptarButton;
+	@FXML
+	private Button continuarTestButton;
 	@FXML
 	private Button salirButton;
 	@FXML
@@ -90,8 +86,6 @@ public class MenuAlumnoController {
 		
 		// TODO MONTAR RESETEO
 		//preguntasTest.clear();
-		
-
 	}
 	
 	@FXML
@@ -143,22 +137,22 @@ public class MenuAlumnoController {
 	@FXML
 	public void onContinuarTestButtonAction() {
 
-		String respuestaUsuario = "";
+		String numRespuestaUsuario = "";
 		
 		if(respuesta1RadioButton.isSelected())
-			respuestaUsuario = "1";
+			numRespuestaUsuario = "1";
 		else if(respuesta2RadioButton.isSelected())
-			respuestaUsuario = "2";
+			numRespuestaUsuario = "2";
 		else if(respuesta3RadioButton.isSelected())
-			respuestaUsuario = "3";
+			numRespuestaUsuario = "3";
 		else
-			respuestaUsuario = "0";
+			numRespuestaUsuario = "0";
 			
-		if(!respuestaUsuario.equals("0")){
+		if(!numRespuestaUsuario.equals("0")){
 
 			if(respuestasTest.size() == posicionActual && posicionActual < tamTotalTest){
 				
-				guardarRespuesta(preguntasTest.get(posicionActual), respuestaUsuario);
+				guardarRespuesta(preguntasTest.get(posicionActual), numRespuestaUsuario);
 				
 				if(respuestasTest.size() < tamTotalTest){
 					continuarTestButton.setText("Continuar");
@@ -172,16 +166,20 @@ public class MenuAlumnoController {
 			else{
 				posicionActual++;
 				if(posicionActual < tamTotalTest){
+					
 					mostrarPregunta(preguntasTest.get(posicionActual));
 					habilitarRadioButton(true);
 					continuarTestButton.setText("Comprobar");
 				}
 				else{
-					System.out.println("termineeeee");
+					//Terminamos el test
+					corregirTestFinal();
+					resetearTest();
+					tabPane.getSelectionModel().select(resultadosTab);
+					
 				}
 			}
 		}
-		
 	}
 	
 	private void habilitarRadioButton(Boolean confirmacion) {
@@ -208,16 +206,16 @@ public class MenuAlumnoController {
 		
 		switch (respuesta.getRespuestaUsuario()) {
 		case "1":
-			respuesta1RadioButton.setTextFill(Color.WHITE);
-			respuesta1RadioButton.setStyle("-fx-background-color: red; -fx-opacity: 1;");
+			respuesta1RadioButton.setTextFill(Color.BLACK);
+			respuesta1RadioButton.setStyle("-fx-background-color: #ff704d; -fx-opacity: 1;");
 			break;
 		case "2":
-			respuesta2RadioButton.setTextFill(Color.WHITE);
-			respuesta2RadioButton.setStyle("-fx-background-color: red; -fx-opacity: 1;");
+			respuesta2RadioButton.setTextFill(Color.BLACK);
+			respuesta2RadioButton.setStyle("-fx-background-color: #ff704d; -fx-opacity: 1;");
 			break;
 		case "3":
-			respuesta3RadioButton.setTextFill(Color.WHITE);
-			respuesta3RadioButton.setStyle("-fx-background-color: red; -fx-opacity: 1;");
+			respuesta3RadioButton.setTextFill(Color.BLACK);
+			respuesta3RadioButton.setStyle("-fx-background-color: #ff704d; -fx-opacity: 1;");
 			break;
 		default:
 			break;
@@ -226,26 +224,24 @@ public class MenuAlumnoController {
 		//colorear correcta
 		switch (respuesta.getRespuestaCorrecta()) {
 		case "1":
-			respuesta1RadioButton.setTextFill(Color.WHITE);
-			respuesta1RadioButton.setStyle("-fx-background-color: green; -fx-opacity: 1;");
+			respuesta1RadioButton.setTextFill(Color.BLACK);
+			respuesta1RadioButton.setStyle("-fx-background-color: #ccff99; -fx-opacity: 1;");
 			break;
 		case "2":
-			respuesta2RadioButton.setTextFill(Color.WHITE);
-			respuesta2RadioButton.setStyle("-fx-background-color: green; -fx-opacity: 1;");
+			respuesta2RadioButton.setTextFill(Color.BLACK);
+			respuesta2RadioButton.setStyle("-fx-background-color: #ccff99; -fx-opacity: 1;");
 			break;
 		case "3":
-			respuesta3RadioButton.setTextFill(Color.WHITE);
-			respuesta3RadioButton.setStyle("-fx-background-color: green; -fx-opacity: 1;");
+			respuesta3RadioButton.setTextFill(Color.BLACK);
+			respuesta3RadioButton.setStyle("-fx-background-color: #ccff99; -fx-opacity: 1;");
 			break;
 		default:
 			break;
 		}
-		
-		
 	}
 
-	@FXML
-	public void onTerminarTestButtonAction() {
+//	@FXML
+//	public void onTerminarTestButtonAction() {
 		
 //		comprobarRespuesta();
 //		
@@ -267,25 +263,25 @@ public class MenuAlumnoController {
 //		terminarTestButton.setDisable(true);
 //		aceptarButton.setDisable(false);
 //		preguntasTest.clear();
-	}
+//	}
 	
 	@FXML
 	public void onSalirTestButtonAction() {
 		
+		resetearTest();
 		tabPane.getSelectionModel().select(inicioTab);
-		realizarTestTab.setDisable(true);
-		aceptarButton.setDisable(false);
-//		aciertos = 0;
-//		fallos = 0;
-		posicionActual = 0;
-		numPreguntaLabel.setText("" + posicionActual);
 	}
+	
+	
 	
 	/*
 	 *********************************************************************************************************************
 	 *** 												METODOS
 	 *********************************************************************************************************************
 	 **/
+	
+	
+	
 	private void rellenarTest() {
 		List<Pregunta> preguntasTotales = ServiceLocator.getPreguntaServices().listarPreguntas();
 		int tamPreguntasTotales = preguntasTotales.size();
@@ -299,6 +295,18 @@ public class MenuAlumnoController {
 				preguntasTest.add(pregunta);
 			}
 		}
+	}
+	
+	private void resetearTest(){
+		
+		aceptarButton.setDisable(false);
+		realizarTestTab.setDisable(true);
+		posicionActual = 0;
+		numPreguntaLabel.setText("" + posicionActual);
+		totalPreguntasLabel.setText("" + tamTotalTest);
+		habilitarRadioButton(true);
+		preguntasTest.clear();
+		respuestasTest.clear();
 	}
 	
 	private void mostrarPregunta(Pregunta pregunta){
@@ -326,11 +334,22 @@ public class MenuAlumnoController {
 		respuesta.setRespuestaUsuario(respuestaUsuario);
 
 		respuestasTest.add(respuesta);
-	}	
+	}
+	
+	private void corregirTestFinal(){
+		int i = 0;
+		for(Respuesta respuesta : respuestasTest){
+			
+			System.out.println("iterador " + (i++));
+			System.out.println("id:" + respuesta.getIdPregunta() + " resp usuario:" + respuesta.getRespuestaUsuario() + " Respuesta correcta:" + respuesta.getRespuestaCorrecta());
+		}
+	}
 
 	public void setMain(Main main) {
 		this.main = main;
 	}
+	
+	
 }
 
 

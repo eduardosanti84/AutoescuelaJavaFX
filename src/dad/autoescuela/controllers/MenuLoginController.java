@@ -32,6 +32,9 @@ public class MenuLoginController {
 
 	@FXML
 	private void initialize() {
+
+		usuarioTextField.setText("");
+		passwordField.setText("");
 		
 		usuarioTextField.setPromptText("Usuario(DNI)");
 		passwordField.setPromptText("Contraseña");
