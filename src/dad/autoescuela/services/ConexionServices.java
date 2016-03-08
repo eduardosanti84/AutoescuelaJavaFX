@@ -13,7 +13,7 @@ public class ConexionServices implements IConexionServices {
 	private static final String USER = "root";
 	private static final String PASS = "";
 	
-	private static Usuario usuario;
+	private static Usuario usuarioActual;
 	
 	public ConexionServices() {
 		conectar();
@@ -47,12 +47,12 @@ public class ConexionServices implements IConexionServices {
 	}
 	
 	@Override
-	public Usuario getUsuario() {
-		return usuario;
+	public Usuario getUsuarioActual() {
+		return usuarioActual;
 	}
 
 	@Override
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
+	public void setUsuarioActual(Usuario usuarioActual) {
+		this.usuarioActual = usuarioActual;
 	}
 }

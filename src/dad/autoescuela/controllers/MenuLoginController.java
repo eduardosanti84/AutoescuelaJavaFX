@@ -19,7 +19,7 @@ import dad.autoescuela.utils.Utils;
 public class MenuLoginController {
 
 	private Main main;
-	public static Usuario usuario;
+	public static Usuario usuarioActual;
 	
 	@FXML
 	private Button conectarButton;
@@ -41,18 +41,19 @@ public class MenuLoginController {
 	@FXML
 	public void onConectarButtonAction() {
 		
-		usuario = new Usuario();
-		usuario.setDni(usuarioTextField.getText());
-		usuario.setPass(passwordField.getText());
+		usuarioActual = new Usuario();
+		String dni = usuarioTextField.getText();
+		String pass = passwordField.getText();
 		
 		List<Usuario> usuarios = new ArrayList<Usuario>();
 		usuarios = ServiceLocator.getUsuarioServices().listarUsuarios();
 		int i;
-		for(i = 0; i < usuarios.size() && !usuarios.get(i).getDni().equalsIgnoreCase(usuario.getDni()); i++);
+		for(i = 0; i < usuarios.size() && !usuarios.get(i).getDni().equalsIgnoreCase(dni); i++);
 		if(i != usuarios.size()){
 
-			if(usuario.getPass().equals(usuarios.get(i).getPass())){
-				ServiceLocator.getConexionServices().setUsuario(usuario);
+			if(pass.equals(usuarios.get(i).getPass())){
+				usuarioActual = usuarios.get(i);
+				ServiceLocator.getConexionServices().setUsuarioActual(usuarioActual);
 				if(usuarios.get(i).isProfesor()){
 					main.showMenuProfesor();
 					main.getPrimaryStage().close();

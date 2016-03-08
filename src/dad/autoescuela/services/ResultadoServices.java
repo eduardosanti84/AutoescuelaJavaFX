@@ -23,9 +23,9 @@ public class ResultadoServices implements IResultadoServices {
 			String consulta = "SELECT alumno_dni, aciertos, fallos, total FROM resultados WHERE alumno_dni = ?";
 			PreparedStatement ps = conexion.prepareStatement(consulta);
 			
-			if(ServiceLocator.getConexionServices().getUsuario() == null)
+			if(ServiceLocator.getConexionServices().getUsuarioActual() == null)
 				ServiceLocator.getConexionServices().conectar();
-			ps.setString(1, MenuLoginController.usuario.getDni());
+			ps.setString(1, MenuLoginController.usuarioActual.getDni());
 			
 			ResultSet rs = ps.executeQuery();
 

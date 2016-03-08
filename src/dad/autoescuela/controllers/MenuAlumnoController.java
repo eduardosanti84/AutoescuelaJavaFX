@@ -5,11 +5,11 @@ import java.util.List;
 
 import dad.autoescuela.Main;
 import dad.autoescuela.model.Pregunta;
+import dad.autoescuela.model.Respuesta;
 import dad.autoescuela.model.Resultado;
+import dad.autoescuela.model.Usuario;
 import dad.autoescuela.resources.images.Images;
 import dad.autoescuela.services.ServiceLocator;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -19,26 +19,26 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 
 
 public class MenuAlumnoController {
 
 	private Main main;
+	private Usuario usuarioActual;
 	private List<Pregunta> preguntasTest;
-	private List<Pregunta> preguntasTotales;
-	private Pregunta pregunta;
-	private int aciertos;
-	private int fallos;
+	private List<Respuesta> respuestasTest;
+//	private int aciertos;
+//	private int fallos;
 	private int tamTotalTest;
 	private int posicionActual;
 
 	@FXML
 	private Button terminarTestButton;
 	@FXML
-	private Button siguienteButton;
+	private Button continuarTestButton;
 	@FXML
 	private Button aceptarButton;
 	@FXML
@@ -47,6 +47,8 @@ public class MenuAlumnoController {
 	private Label preguntaLabel;
 	@FXML
 	private Label numPreguntaLabel;
+	@FXML
+	private Label totalPreguntasLabel;
 	@FXML
 	private RadioButton respuesta1RadioButton;
 	@FXML
@@ -57,8 +59,6 @@ public class MenuAlumnoController {
 	private ImageView imagenImageView;
 	@FXML
 	private TableView<Resultado> tablaResultados;
-	@FXML
-	private TableColumn<Resultado, String> dniColumn;
 	@FXML
 	private TableColumn<Resultado, Number> aciertosColumn;
 	@FXML
@@ -77,32 +77,41 @@ public class MenuAlumnoController {
 	private StackPane banner;
 	@FXML
 	private Button desconectarButton;
+	@FXML
+	private Label nombreUsuarioLabel;
 	
 	public MenuAlumnoController() {
 		
+		usuarioActual = ServiceLocator.getConexionServices().getUsuarioActual();
 		preguntasTest = new ArrayList<Pregunta>();
+		respuestasTest = new ArrayList<Respuesta>();
+		posicionActual = 0;
 		tamTotalTest = 10;
 		
 		// TODO MONTAR RESETEO
-		aciertos = 0;
-		fallos = 0;
-		posicionActual = 0;
+		//preguntasTest.clear();
+		
+
 	}
 	
 	@FXML
 	private void initialize() {
+		
+		numPreguntaLabel.setText("" + posicionActual);
+		totalPreguntasLabel.setText("" + tamTotalTest);
 		/////////////////////////////////////////////////////////////////////////////////////////////////// CABECERA /////
 		banner.setStyle("-fx-background-image: url('/dad/autoescuela/resources/images/bannerNY.png'); " +
 						"-fx-background-size: stretch;"
 		);
+		nombreUsuarioLabel.setText("Bienvenid@: " + usuarioActual.getNombre());
 		//////////////////////////////////////////////////////////////////////////////////// AGRUPACION RADIOBUTTONS /////
 		final ToggleGroup grupoRB = new ToggleGroup();
 		respuesta1RadioButton.setToggleGroup(grupoRB);
 		respuesta2RadioButton.setToggleGroup(grupoRB);
 		respuesta3RadioButton.setToggleGroup(grupoRB);
 		//respuesta1RadioButton.setSelected(true);
+		
 		//////////////////////////////////////////////////////////////////// CONFIGURACION DE LAS CELDAS DE LA TABLA /////
-		dniColumn.setCellValueFactory(cellData -> cellData.getValue().alumno_dniProperty());
 		aciertosColumn.setCellValueFactory(cellData -> cellData.getValue().aciertosProperty());
 		fallosColumn.setCellValueFactory(cellData -> cellData.getValue().fallosProperty());
 		totalColumn.setCellValueFactory(cellData -> cellData.getValue().totalProperty());
@@ -123,69 +132,141 @@ public class MenuAlumnoController {
 	@FXML
 	public void onAceptarButtonAction() {
 		rellenarTest();
-		mostrarPregunta(preguntasTest.get(0));
-		posicionActual++;
-
+		mostrarPregunta(preguntasTest.get(posicionActual));
+		//posicionActual++;
+		
 		realizarTestTab.setDisable(false);
 		tabPane.getSelectionModel().select(realizarTestTab);
 		aceptarButton.setDisable(true);
 	}
-
-	@FXML
-	public void onSiguienteTestButtonAction() {
 	
-		comprobarRespuesta();
+	@FXML
+	public void onContinuarTestButtonAction() {
+
+		String respuestaUsuario = "";
 		
-		if(posicionActual < tamTotalTest-1){
+		if(respuesta1RadioButton.isSelected())
+			respuestaUsuario = "1";
+		else if(respuesta2RadioButton.isSelected())
+			respuestaUsuario = "2";
+		else if(respuesta3RadioButton.isSelected())
+			respuestaUsuario = "3";
+		else
+			respuestaUsuario = "0";
+			
+		if(!respuestaUsuario.equals("0")){
 
-			mostrarPregunta(preguntasTest.get(posicionActual));
-			posicionActual++;
+			if(respuestasTest.size() == posicionActual && posicionActual < tamTotalTest){
+				
+				guardarRespuesta(preguntasTest.get(posicionActual), respuestaUsuario);
+				
+				if(respuestasTest.size() < tamTotalTest){
+					continuarTestButton.setText("Continuar");
+				}
+				else{
+					continuarTestButton.setText("Terminar");
+				}
+				habilitarRadioButton(false);
+				mostrarResultado(respuestasTest.get(posicionActual));
+			}
+			else{
+				posicionActual++;
+				if(posicionActual < tamTotalTest){
+					mostrarPregunta(preguntasTest.get(posicionActual));
+					habilitarRadioButton(true);
+					continuarTestButton.setText("Comprobar");
+				}
+				else{
+					System.out.println("termineeeee");
+				}
+			}
 		}
-		else{
-			siguienteButton.setDisable(true);
-			terminarTestButton.setDisable(false);
-		}
+		
 	}
 	
-	@FXML
-	public void onAnteriorTestButtonAction() {
-	
-		//comprobarRespuesta();
-		//TODO TAL VEZ HAGA FALTA UN OBJETO RESPUESTA
-		if(posicionActual < tamTotalTest-1){
-
-			mostrarPregunta(preguntasTest.get(posicionActual));
-			posicionActual++;
+	private void habilitarRadioButton(Boolean confirmacion) {
+		if(confirmacion){
+			respuesta1RadioButton.setDisable(false);
+			respuesta2RadioButton.setDisable(false);
+			respuesta3RadioButton.setDisable(false);
+			respuesta1RadioButton.setTextFill(Color.BLACK);
+			respuesta2RadioButton.setTextFill(Color.BLACK);
+			respuesta3RadioButton.setTextFill(Color.BLACK);
+			respuesta1RadioButton.setStyle("");
+			respuesta2RadioButton.setStyle("");
+			respuesta3RadioButton.setStyle("");
 		}
 		else{
-			siguienteButton.setDisable(true);
-			terminarTestButton.setDisable(false);
+			respuesta1RadioButton.setDisable(true);
+			respuesta2RadioButton.setDisable(true);
+			respuesta3RadioButton.setDisable(true);
+			
 		}
 	}
-	
+
+	private void mostrarResultado(Respuesta respuesta) {
+		
+		switch (respuesta.getRespuestaUsuario()) {
+		case "1":
+			respuesta1RadioButton.setTextFill(Color.WHITE);
+			respuesta1RadioButton.setStyle("-fx-background-color: red; -fx-opacity: 1;");
+			break;
+		case "2":
+			respuesta2RadioButton.setTextFill(Color.WHITE);
+			respuesta2RadioButton.setStyle("-fx-background-color: red; -fx-opacity: 1;");
+			break;
+		case "3":
+			respuesta3RadioButton.setTextFill(Color.WHITE);
+			respuesta3RadioButton.setStyle("-fx-background-color: red; -fx-opacity: 1;");
+			break;
+		default:
+			break;
+		}
+		
+		//colorear correcta
+		switch (respuesta.getRespuestaCorrecta()) {
+		case "1":
+			respuesta1RadioButton.setTextFill(Color.WHITE);
+			respuesta1RadioButton.setStyle("-fx-background-color: green; -fx-opacity: 1;");
+			break;
+		case "2":
+			respuesta2RadioButton.setTextFill(Color.WHITE);
+			respuesta2RadioButton.setStyle("-fx-background-color: green; -fx-opacity: 1;");
+			break;
+		case "3":
+			respuesta3RadioButton.setTextFill(Color.WHITE);
+			respuesta3RadioButton.setStyle("-fx-background-color: green; -fx-opacity: 1;");
+			break;
+		default:
+			break;
+		}
+		
+		
+	}
+
 	@FXML
 	public void onTerminarTestButtonAction() {
 		
-		comprobarRespuesta();
-		
-		Resultado resultado = new Resultado();
-		resultado.setAlumno_dni(ServiceLocator.getConexionServices().getUsuario().getDni());
-		resultado.setAciertos(aciertos);
-		resultado.setFallos(fallos);
-		resultado.setTotal(tamTotalTest);
-		ServiceLocator.getResultadoServices().crearResultado(resultado);
-		
-		tabPane.getSelectionModel().select(resultadosTab);
-		realizarTestTab.setDisable(true);
-		
-		fallos = 0;
-		aciertos = 0;
-		posicionActual = 0;
-		
-		siguienteButton.setDisable(false);
-		terminarTestButton.setDisable(true);
-		aceptarButton.setDisable(false);
-		preguntasTest.clear();
+//		comprobarRespuesta();
+//		
+//		Resultado resultado = new Resultado();
+//		resultado.setAlumno_dni(usuarioActual.getDni());
+//		resultado.setAciertos(aciertos);
+//		resultado.setFallos(fallos);
+//		resultado.setTotal(tamTotalTest);
+//		ServiceLocator.getResultadoServices().crearResultado(resultado);
+//		
+//		tabPane.getSelectionModel().select(resultadosTab);
+//		realizarTestTab.setDisable(true);
+//		
+//		fallos = 0;
+//		aciertos = 0;
+//		posicionActual = 0;
+//		
+//		siguienteButton.setDisable(false);
+//		terminarTestButton.setDisable(true);
+//		aceptarButton.setDisable(false);
+//		preguntasTest.clear();
 	}
 	
 	@FXML
@@ -194,10 +275,10 @@ public class MenuAlumnoController {
 		tabPane.getSelectionModel().select(inicioTab);
 		realizarTestTab.setDisable(true);
 		aceptarButton.setDisable(false);
-		aciertos = 0;
-		fallos = 0;
+//		aciertos = 0;
+//		fallos = 0;
 		posicionActual = 0;
-		numPreguntaLabel.setText(posicionActual + " - " + tamTotalTest);
+		numPreguntaLabel.setText("" + posicionActual);
 	}
 	
 	/*
@@ -206,7 +287,7 @@ public class MenuAlumnoController {
 	 *********************************************************************************************************************
 	 **/
 	private void rellenarTest() {
-		preguntasTotales = ServiceLocator.getPreguntaServices().listarPreguntas();
+		List<Pregunta> preguntasTotales = ServiceLocator.getPreguntaServices().listarPreguntas();
 		int tamPreguntasTotales = preguntasTotales.size();
 		
 		while(preguntasTest.size() < tamTotalTest){
@@ -221,7 +302,6 @@ public class MenuAlumnoController {
 	}
 	
 	private void mostrarPregunta(Pregunta pregunta){
-		this.pregunta = pregunta;
 		if(posicionActual != tamTotalTest){
 			if(pregunta.getImagen() != null)
 				imagenImageView.setImage(pregunta.getImagen());
@@ -233,33 +313,20 @@ public class MenuAlumnoController {
 			respuesta3RadioButton.setText(pregunta.getPregunta3());
 			
 			//TODO REVISAR EL CONTADOR EN INTERFAZ
-			//numPreguntaLabel.setText("Total: " + (++total) + " - " + tamTotalTest);
+			numPreguntaLabel.setText("" + (posicionActual + 1));
+			totalPreguntasLabel.setText("" + tamTotalTest);
 		}
 	}
 	
-	private void comprobarRespuesta(){
+	private void guardarRespuesta(Pregunta pregunta, String respuestaUsuario){
 		
-		//TODO REVISAR
-		if(respuesta1RadioButton.isSelected())
-			if(ServiceLocator.getPreguntaServices().comprobarRespuesta(pregunta, "1"))
-				aciertos++;
-			else
-				fallos++;
-		else
-			if(respuesta2RadioButton.isSelected())
-				if(ServiceLocator.getPreguntaServices().comprobarRespuesta(pregunta, "2"))
-					aciertos++;
-				else
-					fallos++;
-			else
-				if(respuesta3RadioButton.isSelected())
-					if(ServiceLocator.getPreguntaServices().comprobarRespuesta(pregunta, "3"))
-						aciertos++;
-					else
-						fallos++;
-				else
-					fallos++;
-	}
+		Respuesta respuesta = new Respuesta();
+		respuesta.setIdPregunta(pregunta.getId());
+		respuesta.setRespuestaCorrecta(pregunta.getRespuesta());
+		respuesta.setRespuestaUsuario(respuestaUsuario);
+
+		respuestasTest.add(respuesta);
+	}	
 
 	public void setMain(Main main) {
 		this.main = main;
@@ -275,7 +342,25 @@ public class MenuAlumnoController {
 
 
 
-
+//if(respuesta1RadioButton.isSelected())
+//if(ServiceLocator.getPreguntaServices().comprobarRespuesta(pregunta, "1"))
+//	aciertos++;
+//else
+//	fallos++;
+//else
+//if(respuesta2RadioButton.isSelected())
+//	if(ServiceLocator.getPreguntaServices().comprobarRespuesta(pregunta, "2"))
+//		aciertos++;
+//	else
+//		fallos++;
+//else
+//	if(respuesta3RadioButton.isSelected())
+//		if(ServiceLocator.getPreguntaServices().comprobarRespuesta(pregunta, "3"))
+//			aciertos++;
+//		else
+//			fallos++;
+//	else
+//		fallos++;
 
 
 

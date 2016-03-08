@@ -9,6 +9,6 @@ public interface IConexionServices {
 	public boolean conectar();
 	public Connection getConexion();
 	public void desconectar();
-	public Usuario getUsuario();
-	public void setUsuario(Usuario usuario);
+	public Usuario getUsuarioActual();
+	public void setUsuarioActual(Usuario usuario);
 }
