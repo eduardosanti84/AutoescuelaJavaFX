@@ -97,9 +97,4 @@ public class Resultado {
 			return false;
 		return true;
 	}
-	
-	
-	
-	
-	
 }

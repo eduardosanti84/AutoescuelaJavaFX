@@ -59,25 +59,12 @@ public class PreguntaServices implements IPreguntaServices{
 	public Boolean crearPregunta(Pregunta pregunta) {
 		
 		if(!preguntas.contains(pregunta)){
-//			for(int i = 0; i < preguntas.size(); i++){
-//				if(preguntas.get(i).getId() == pregunta.getId()){
-//					break;
-//				}
-//			}
-//			
-//			int i;
-//			for (i = 0; i < preguntas.size() && preguntas.get(i).getId() != pregunta.getId(); i++);
-//			
-//			if (i == preguntas.size()) {
-				
-					
-				crearPreguntaDB(pregunta);
-				//al insertar ya tenemos la id, la necesitamos para rellenar en la lista observable y luego ne el tableview
-				pregunta.setId(tomarUltimaIdDB());
-				preguntas.add(pregunta);
-				
-				return true;
-//			}
+
+			crearPreguntaDB(pregunta);
+			//tras insertar ya tenemos la id, la necesitamos para rellenar en la lista observable y luego en el tableview
+			pregunta.setId(tomarUltimaIdDB());
+			preguntas.add(pregunta);
+			return true;
 		}
 		else
 			return false;
@@ -108,7 +95,7 @@ public class PreguntaServices implements IPreguntaServices{
 		PreparedStatement preparedStatement = null;
 		
 		try{ 
-			String consulta = "INSERT INTO preguntas(enunciado, respuesta1, respuesta2, respuesta3, respuestaCorrecto, imagen) VALUES (?, ?, ?, ?, ?, ?)";    
+			String consulta = "INSERT INTO preguntas(enunciado, respuesta1, respuesta2, respuesta3, respuestaCorrecta, imagen) VALUES (?, ?, ?, ?, ?, ?)";    
 			preparedStatement = conexion.prepareStatement(consulta);
 			
 			if(pregunta.getImagen() != null){
@@ -168,3 +155,16 @@ public class PreguntaServices implements IPreguntaServices{
 		return id;
 	}
 }
+
+//for(int i = 0; i < preguntas.size(); i++){
+//if(preguntas.get(i).getId() == pregunta.getId()){
+//	break;
+//}
+//}
+//
+//int i;
+//for (i = 0; i < preguntas.size() && preguntas.get(i).getId() != pregunta.getId(); i++);
+//
+//if (i == preguntas.size()) {
+
+	

@@ -81,18 +81,13 @@ public class MenuAlumnoController {
 		usuarioActual = ServiceLocator.getConexionServices().getUsuarioActual();
 		preguntasTest = new ArrayList<Pregunta>();
 		respuestasTest = new ArrayList<Respuesta>();
+		tablaResultados = new TableView<>();
 		posicionActual = 0;
 		tamTotalTest = 10;
-		
-		// TODO MONTAR RESETEO
-		//preguntasTest.clear();
 	}
 	
 	@FXML
 	private void initialize() {
-		
-		numPreguntaLabel.setText("" + posicionActual);
-		totalPreguntasLabel.setText("" + tamTotalTest);
 		/////////////////////////////////////////////////////////////////////////////////////////////////// CABECERA /////
 		banner.setStyle("-fx-background-image: url('/dad/autoescuela/resources/images/bannerNY.png'); " +
 						"-fx-background-size: stretch;"
@@ -109,9 +104,9 @@ public class MenuAlumnoController {
 		aciertosColumn.setCellValueFactory(cellData -> cellData.getValue().aciertosProperty());
 		fallosColumn.setCellValueFactory(cellData -> cellData.getValue().fallosProperty());
 		totalColumn.setCellValueFactory(cellData -> cellData.getValue().totalProperty());
-
 		tablaResultados.setItems(ServiceLocator.getResultadoServices().listarResultados());
 	}
+	
 	/*
 	 *********************************************************************************************************************
 	 *** 												LISTENER
@@ -119,7 +114,7 @@ public class MenuAlumnoController {
 	 **/
 	@FXML
 	public void onDesconectarButtonAction() {
-		main.getStage().close();
+		main.getStagesAlumno().close();
 		main.getPrimaryStage().show();	
 	}
 	
@@ -151,22 +146,24 @@ public class MenuAlumnoController {
 		if(!numRespuestaUsuario.equals("0")){
 
 			if(respuestasTest.size() == posicionActual && posicionActual < tamTotalTest){
-				
+				//guardamos en una lista la respuesta del usuario
 				guardarRespuesta(preguntasTest.get(posicionActual), numRespuestaUsuario);
 				
 				if(respuestasTest.size() < tamTotalTest){
 					continuarTestButton.setText("Continuar");
 				}
 				else{
+					//si es la ultima pregunta solo queda terminar 
 					continuarTestButton.setText("Terminar");
 				}
+				//mostramos resultado sobre la pregunta hecha
 				habilitarRadioButton(false);
 				mostrarResultado(respuestasTest.get(posicionActual));
 			}
 			else{
 				posicionActual++;
 				if(posicionActual < tamTotalTest){
-					
+					//mostramos una nueva pregutna
 					mostrarPregunta(preguntasTest.get(posicionActual));
 					habilitarRadioButton(true);
 					continuarTestButton.setText("Comprobar");
@@ -176,7 +173,6 @@ public class MenuAlumnoController {
 					corregirTestFinal();
 					resetearTest();
 					tabPane.getSelectionModel().select(resultadosTab);
-					
 				}
 			}
 		}
@@ -198,12 +194,11 @@ public class MenuAlumnoController {
 			respuesta1RadioButton.setDisable(true);
 			respuesta2RadioButton.setDisable(true);
 			respuesta3RadioButton.setDisable(true);
-			
 		}
 	}
 
 	private void mostrarResultado(Respuesta respuesta) {
-		
+		//colorear la respuesta del usuario, por si acaso se colorea en rojo.
 		switch (respuesta.getRespuestaUsuario()) {
 		case "1":
 			respuesta1RadioButton.setTextFill(Color.BLACK);
@@ -221,7 +216,7 @@ public class MenuAlumnoController {
 			break;
 		}
 		
-		//colorear correcta
+		//colorear correcta, si el usuario acertó quedara en verde.
 		switch (respuesta.getRespuestaCorrecta()) {
 		case "1":
 			respuesta1RadioButton.setTextFill(Color.BLACK);
@@ -240,30 +235,7 @@ public class MenuAlumnoController {
 		}
 	}
 
-//	@FXML
-//	public void onTerminarTestButtonAction() {
-		
-//		comprobarRespuesta();
-//		
-//		Resultado resultado = new Resultado();
-//		resultado.setAlumno_dni(usuarioActual.getDni());
-//		resultado.setAciertos(aciertos);
-//		resultado.setFallos(fallos);
-//		resultado.setTotal(tamTotalTest);
-//		ServiceLocator.getResultadoServices().crearResultado(resultado);
-//		
-//		tabPane.getSelectionModel().select(resultadosTab);
-//		realizarTestTab.setDisable(true);
-//		
-//		fallos = 0;
-//		aciertos = 0;
-//		posicionActual = 0;
-//		
-//		siguienteButton.setDisable(false);
-//		terminarTestButton.setDisable(true);
-//		aceptarButton.setDisable(false);
-//		preguntasTest.clear();
-//	}
+
 	
 	@FXML
 	public void onSalirTestButtonAction() {
@@ -272,16 +244,11 @@ public class MenuAlumnoController {
 		tabPane.getSelectionModel().select(inicioTab);
 	}
 	
-	
-	
 	/*
 	 *********************************************************************************************************************
 	 *** 												METODOS
 	 *********************************************************************************************************************
 	 **/
-	
-	
-	
 	private void rellenarTest() {
 		List<Pregunta> preguntasTotales = ServiceLocator.getPreguntaServices().listarPreguntas();
 		int tamPreguntasTotales = preguntasTotales.size();
@@ -337,12 +304,23 @@ public class MenuAlumnoController {
 	}
 	
 	private void corregirTestFinal(){
-		int i = 0;
+
+		Resultado resultado = new Resultado();
+		resultado.setAlumno_dni(usuarioActual.getDni());
+		resultado.setAciertos(0);
+		resultado.setFallos(0);
+		resultado.setTotal(tamTotalTest);
+		
 		for(Respuesta respuesta : respuestasTest){
-			
-			System.out.println("iterador " + (i++));
+
+			if(respuesta.getRespuestaUsuario().equals(respuesta.getRespuestaCorrecta()))
+				
+				resultado.setAciertos(resultado.getAciertos()+1);
+			else
+				resultado.setFallos(resultado.getFallos()+1);
 			System.out.println("id:" + respuesta.getIdPregunta() + " resp usuario:" + respuesta.getRespuestaUsuario() + " Respuesta correcta:" + respuesta.getRespuestaCorrecta());
 		}
+		ServiceLocator.getResultadoServices().crearResultado(resultado);
 	}
 
 	public void setMain(Main main) {
@@ -354,7 +332,30 @@ public class MenuAlumnoController {
 
 
 
-
+//@FXML
+//public void onTerminarTestButtonAction() {
+	
+//	comprobarRespuesta();
+//	
+//	Resultado resultado = new Resultado();
+//	resultado.setAlumno_dni(usuarioActual.getDni());
+//	resultado.setAciertos(aciertos);
+//	resultado.setFallos(fallos);
+//	resultado.setTotal(tamTotalTest);
+//	ServiceLocator.getResultadoServices().crearResultado(resultado);
+//	
+//	tabPane.getSelectionModel().select(resultadosTab);
+//	realizarTestTab.setDisable(true);
+//	
+//	fallos = 0;
+//	aciertos = 0;
+//	posicionActual = 0;
+//	
+//	siguienteButton.setDisable(false);
+//	terminarTestButton.setDisable(true);
+//	aceptarButton.setDisable(false);
+//	preguntasTest.clear();
+//}
 
 
 

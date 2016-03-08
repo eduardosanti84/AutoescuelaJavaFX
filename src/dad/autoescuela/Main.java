@@ -3,6 +3,8 @@ package dad.autoescuela;
 import java.io.IOException;
 
 import dad.autoescuela.controllers.MenuAlumnoController;
+import dad.autoescuela.controllers.MenuCrearPreguntaController;
+import dad.autoescuela.controllers.MenuCrearUsuarioController;
 import dad.autoescuela.controllers.MenuLoginController;
 import dad.autoescuela.controllers.MenuProfesorController;
 import javafx.application.Application;
@@ -11,7 +13,12 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-	Stage stage;
+	Stage stageProfesor;
+	Stage stageAlumno;
+	Stage stageCrearUsuario;
+	Stage stageCrearPregunta;
+	
+	//Stage stage;
 	Stage primaryStage;
 	
 	@Override
@@ -41,7 +48,7 @@ public class Main extends Application {
 	}
 	
 	public void showMenuAlumno(){
-		stage = new Stage();
+		stageAlumno = new Stage();
 		
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(getClass().getResource("ui/MenuAlumno.fxml"));
@@ -51,8 +58,8 @@ public class Main extends Application {
 			MenuAlumnoController menuAlumnoController = loader.getController();
 			menuAlumnoController.setMain(this);
 			
-			stage.setScene(scene);
-			stage.show();
+			stageAlumno.setScene(scene);
+			stageAlumno.show();
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -61,7 +68,7 @@ public class Main extends Application {
 	
 	public void showMenuProfesor(){
 		
-		stage = new Stage();
+		stageProfesor = new Stage();
 		
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(getClass().getResource("ui/MenuProfesor.fxml"));
@@ -71,8 +78,48 @@ public class Main extends Application {
 			MenuProfesorController menuProfesorController = loader.getController();
 			menuProfesorController.setMain(this);
 			
-			stage.setScene(scene);
-			stage.show();
+			stageProfesor.setScene(scene);
+			stageProfesor.show();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void showMenuCrearUsuario(){
+		
+		stageCrearUsuario = new Stage();
+		
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("ui/MenuCrearUsuario.fxml"));
+		try {
+			Scene scene = new Scene(loader.load());
+			
+			MenuCrearUsuarioController menuCrearUsuarioController = loader.getController();
+			menuCrearUsuarioController.setMain(this);
+			
+			stageCrearUsuario.setScene(scene);
+			stageCrearUsuario.show();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}	
+	
+	public void showMenuCrearPregunta(){
+		
+		stageCrearPregunta = new Stage();
+		
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("ui/MenuCrearPregunta.fxml"));
+		try {
+			Scene scene = new Scene(loader.load());
+			
+			MenuCrearPreguntaController menuCrearPreguntaController = loader.getController();
+			menuCrearPreguntaController.setMain(this);
+			
+			stageCrearPregunta.setScene(scene);
+			stageCrearPregunta.show();
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -83,8 +130,21 @@ public class Main extends Application {
 		return this.primaryStage;
 	}
 	
-	public Stage getStage() {
-		return stage;
+//	public Stage getStages() {
+//		return stage;
+//	}
+	
+	public Stage getStagesAlumno() {
+		return stageAlumno;
+	}
+	public Stage getStagesProfesor() {
+		return stageProfesor;
+	}
+	public Stage getStagesCrearUsuario() {
+		return stageCrearUsuario;
+	}
+	public Stage getStagesCrearPregunta() {
+		return stageCrearPregunta;
 	}
 
 	public static void main(String[] args) {

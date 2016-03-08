@@ -1,57 +1,29 @@
 package dad.autoescuela.controllers;
 
-import java.io.File;
-
 import dad.autoescuela.Main;
 import dad.autoescuela.model.Pregunta;
 import dad.autoescuela.model.Usuario;
 import dad.autoescuela.resources.images.Images;
 import dad.autoescuela.services.ServiceLocator;
 import dad.autoescuela.utils.Utils;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Toggle;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
 import javafx.util.Callback;
+
 public class MenuProfesorController {	
 	
 	private Main main;
 	private Usuario usuarioActual;
-	private String radioButtonSelected = "1";
-	private File imagenFile = null;
-
-	@FXML
-	private ToggleButton profesorButton;
-	@FXML
-	private Button guardarUsuarioButton;
-	@FXML
-	private TextField nombreTextField;
-	@FXML
-	private TextField dniTextField;
-	@FXML
-	private TextField passwordTextField;
 	
 	@FXML
 	private TableView<Usuario> tablaUsuarios;
@@ -62,6 +34,8 @@ public class MenuProfesorController {
 	@FXML
 	private TableColumn<Usuario, Boolean> profesorColumn;
 	@FXML
+	private Button abrirCrearUsuarioButton;
+	@FXML
 	private Button eliminarUsuarioButton;
 	
 	@FXML
@@ -71,28 +45,10 @@ public class MenuProfesorController {
 	@FXML
 	private TableColumn<Pregunta, String> enunciadoColumn;
 	@FXML
+	private Button abrirCrearPreguntaButton;
+	@FXML
 	private Button eliminarPreguntaButton;
-	
-	@FXML
-	private RadioButton rb1;
-	@FXML
-	private RadioButton rb2;
-	@FXML
-	private RadioButton rb3;
-	
-	@FXML
-	private Button guardarPreguntaButton;
-	@FXML
-	private TextArea enunciadoTextArea;
-	@FXML
-	private TextArea pregunta1TextArea;
-	@FXML
-	private TextArea pregunta2TextArea;
-	@FXML
-	private TextArea pregunta3TextArea;
-	@FXML
-	private ImageView imagenPregunta;
-	
+
 	@FXML
 	private Label nombreUsuarioLabel;
 	@FXML
@@ -115,11 +71,7 @@ public class MenuProfesorController {
 	            );
 		nombreUsuarioLabel.setText("Bienvenid@: " + usuarioActual.getNombre());
 		////////////////////////////////////////////////////////////////////////////////////AGRUPACION RADIOBUTTONS /////
-		final ToggleGroup grupoRB = new ToggleGroup();
-		rb1.setToggleGroup(grupoRB);
-		rb1.setSelected(true);
-		rb2.setToggleGroup(grupoRB);
-		rb3.setToggleGroup(grupoRB);
+		
 		////////////////////////////////////////////////////////////////////CONFIGURACION DE LAS CELDAS DE LA TABLA /////
 		dniColumn.setCellValueFactory(cellData -> cellData.getValue().dniProperty());
 		nombreColumn.setCellValueFactory(cellData -> cellData.getValue().nombreProperty());
@@ -158,12 +110,10 @@ public class MenuProfesorController {
 		        return cell;
 		    }
 		});
-		///////////////////////////////////////////////////////////////////////////////////////////TODO VER PREGUNTAS /////
+		///////////////////////////////////////////////////////////////////////////////////////////////TODO PREGUNTAS /////
 		idPreguntaColumn.setCellValueFactory(cellData -> cellData.getValue().idPreguntaProperty());
 		enunciadoColumn.setCellValueFactory(cellData -> cellData.getValue().enunciadoProperty());
-		
 		tablaPreguntas.setItems(ServiceLocator.getPreguntaServices().listarPreguntas());
-
 	}
 	
 	/*
@@ -171,191 +121,52 @@ public class MenuProfesorController {
 	 *** 												LISTENER
 	 *********************************************************************************************************************
 	 **/
+	/////////////////////////////////////////////////////////////////////////////////////////////////TODO BANNER /////
 	@FXML
 	public void onDesconectarButtonAction() {
-		main.getStage().close();
+		main.getStagesProfesor().close();
 		main.getPrimaryStage().show();	
 	}
-		
-//	profesorButton.selectedProperty().addListener((obs, oldValue, newValue) -> {
-//		
-//		if(newValue){
-//			profesorButton.setText("SI");
-//		}
-//		else
-//			profesorButton.setText("NO");
-//	});	
-//		
-		/////////////////////////////////////////////////////////////////////////////////////TODO FORMULARIO USUARIO /////
-//		profesorButton.selectedProperty().addListener((obs, oldValue, newValue) -> {
-//			
-//			if(newValue){
-//				profesorButton.setText("SI");
-//			}
-//			else
-//				profesorButton.setText("NO");
-//		});
-//		
-//		guardarUsuarioButton.onActionProperty().set(new EventHandler<ActionEvent>() {
-//			public void handle(ActionEvent arg0) {
-//				
-//				if(!nombreTextField.getText().isEmpty() && !dniTextField.getText().isEmpty() && !passwordTextField.getText().isEmpty()){
-//
-//					Usuario usuario = new Usuario();
-//					usuario.setNombre(nombreTextField.getText());
-//					usuario.setDni(dniTextField.getText());
-//					usuario.setPass(passwordTextField.getText());
-//					usuario.setProfesor(profesorButton.isSelected());
-//					
-//					if(ServiceLocator.getUsuarioServices().crearUsuario(usuario)){
-//						Utils.mensaje(AlertType.INFORMATION, "Correcto", "Confirmacion de Inserción", "Se ha registrado el nuevo usuario!");
-//						limpiarFormularioAlumno();
-//					}
-//					else Utils.mensaje(AlertType.ERROR, "Error", "Error al crear", "Ha ocurrido un error al crear el usuario, comprueba los datos.!");
-//				}
-//				else  Utils.mensaje(AlertType.ERROR, "Error", "Comprobación de los datos", "Faltan datos!");
-//
-//			}
-//		});
-//		
-//		///////////////////////////////////////////////////////////////////////////////////////////TODO VER USUARIOS /////
-//		
-//
-//		
-//		eliminarUsuarioButton.onActionProperty().set(new EventHandler<ActionEvent>() {
-//			public void handle(ActionEvent event) {
-//				
-//				if(Utils.confirmacion("Confirmacion", 
-//						"¿Realmente quiere eliminar este usuario?", 
-//						"Si elimina este usuario no podrá recuperarlo y se eliminaran todos sus datos, incluido los resultados de sus test."))
-//				{
-//					Usuario usuario = tablaUsuarios.selectionModelProperty().get().getSelectedItem();
-//					
-//					if(!ServiceLocator.getUsuarioServices().eliminarUsuario(usuario))
-//						//Utils.mensaje(AlertType.INFORMATION, "Correcto", "Se ha eliminado al usuario", "");
-//					//else  
-//						Utils.mensaje(AlertType.ERROR, "Error", "Error al eliminar", "Ha ocurrido un error al eliminar el usuario, contacta con el administrador!");
-//				}
-//			}
-//		});
-//		
-//		////////////////////////////////////////////////////////////////////////////////////TODO FORMULARIO PREGUNTA /////
-//		
-//		imagenPregunta.setImage(Images.INSERT_IMAGE);
-//		
-//		imagenPregunta.onMouseClickedProperty().set(new EventHandler<Event>() {
-//			public void handle(Event event) {
-//				
-//				imagenFile = null;
-//				FileChooser fileChooser = new FileChooser();
-//                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("All Images", "*.*"));
-//                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JPG", "*.jpg"));
-//                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("BMP", "*.bmp"));
-//                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG", "*.png"));
-//                
-//                imagenFile = fileChooser.showOpenDialog(null);
-//                
-//                if(imagenFile != null)
-//                	imagenPregunta.setImage(new Image(imagenFile.toURI().toString()));
-//			}
-//		});
-//		
-//		
-//		
-//		grupoRB.selectedToggleProperty().addListener(new ChangeListener<Toggle>(){
-//			public void changed(ObservableValue<? extends Toggle> ov, Toggle old_toggle, Toggle new_toggle) {
-//
-//	            if(rb1.isSelected())
-//	            	radioButtonSelected = "1";
-//	            if(rb2.isSelected())
-//	            	radioButtonSelected = "2";
-//	            if(rb3.isSelected())
-//	            	radioButtonSelected = "3";
-//		    }
-//		});
-//
-//		guardarPreguntaButton.onActionProperty().set(new EventHandler<ActionEvent>() {
-//			public void handle(ActionEvent arg0) {
-//				
-//				if(!enunciadoTextArea.getText().isEmpty() && !pregunta1TextArea.getText().isEmpty() && 
-//					!pregunta2TextArea.getText().isEmpty() && !pregunta3TextArea.getText().isEmpty()){
-//
-//					Pregunta pregunta = new Pregunta();
-//					pregunta.setEnunciado(enunciadoTextArea.getText());
-//					pregunta.setPregunta1(pregunta1TextArea.getText());
-//					pregunta.setPregunta2(pregunta2TextArea.getText());
-//					pregunta.setPregunta3(pregunta3TextArea.getText());
-//					pregunta.setRespuesta(radioButtonSelected);
-//					pregunta.setImagen(new Image(imagenFile.toURI().toString()));
-//					
-//					if(ServiceLocator.getPreguntaServices().crearPregunta(pregunta)){
-//						Utils.mensaje(AlertType.INFORMATION, "Correcto", "Se ha creado la pregunta", "La pregunta se ha creado correctamente!");
-//						limpiarFormularioPregunta();
-//					}
-//					else  Utils.mensaje(AlertType.ERROR, "Error", "Error al crear", "Ha ocurrido un error al crear la pregunta, comprueba los datos!");
-//				}
-//				else  Utils.mensaje(AlertType.ERROR, "Error", "Comprobación de los datos", "Faltan datos!");
-//			}
-//		});
-//		
-//
-//		eliminarPreguntaButton.onActionProperty().set(new EventHandler<ActionEvent>() {
-//			public void handle(ActionEvent event) {
-//				
-//				if(Utils.confirmacion("Confirmacion", 
-//						"¿Realmente quiere eliminar esta pregunta?", 
-//						"Si elimina esta pregunta no podrá recuperarla pero se mantendrán intacto los resultados de los test en la que se incluyó esta pregunta."))
-//				{
-//					Pregunta pregunta = tablaPreguntas.selectionModelProperty().get().getSelectedItem();
-//					
-//					if(!ServiceLocator.getPreguntaServices().eliminarPregunta(pregunta))
-//						//Utils.mensaje(AlertType.INFORMATION, "Correcto", "Se ha eliminado la pregunta", "");
-//					//else  
-//						Utils.mensaje(AlertType.ERROR, "Error", "Error al eliminar", "Ha ocurrido un error al eliminar la pregunta, contacta con el administrador!"); 
-//				}
-//			}
-//		});
-//		
-//		tablaPreguntas.setRowFactory( tv -> {
-//	    TableRow<Pregunta> row = new TableRow<>();
-//		    row.setOnMouseClicked(event -> {
-//		        if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
-//		        	
-//		        	Pregunta rowData = row.getItem();
-//		        	//TODO 
-//		        }
-//		    });
-//		    return row ;
-//		});
-//	}
 	
-	
-	
-	
-	
-	
-	
-//		tablaPreguntas.getSelectionModel().selectedItemProperty().addListener(
-//				(observable, oldValue, newValue) -> showPreguntasDetails(newValue));
-//	}
-//	private void showPreguntasDetails(Pregunta newValue) {
-//		System.out.println(newValue.getPregunta1());
-//	}
-
-	private void limpiarFormularioAlumno(){
-		nombreTextField.setText("");
-		dniTextField.setText("");
-		passwordTextField.setText("");
-	}
-	private void limpiarFormularioPregunta(){
-		enunciadoTextArea.setText("");
-		pregunta1TextArea.setText("");
-		pregunta2TextArea.setText("");
-		pregunta3TextArea.setText("");
-		imagenPregunta.setImage(Images.INSERT_IMAGE);
-		imagenFile = null;
+	///////////////////////////////////////////////////////////////////////////////////////////////TODO USUARIOS /////
+	@FXML
+	public void onCrearUsuarioButtonAction(){
+		main.showMenuCrearUsuario();
 	}
 
+	@FXML
+	public void onEliminarUsuarioButtonAction(){	
+
+		if(Utils.confirmacion("Confirmacion", 
+				"¿Realmente quiere eliminar este usuario?", 
+				"Si elimina este usuario no podrá recuperarlo y se eliminaran todos sus datos, incluido los resultados de sus test."))
+		{
+			Usuario usuario = tablaUsuarios.selectionModelProperty().get().getSelectedItem();
+			
+			if(!ServiceLocator.getUsuarioServices().eliminarUsuario(usuario)) 
+				Utils.mensaje(AlertType.ERROR, "Error", "Error al eliminar", "Ha ocurrido un error al eliminar el usuario, contacta con el administrador!");
+		}
+	}
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////TODO PREGUNTAS /////
+	@FXML
+	public void onCrearPreguntaButtonAction(){
+		main.showMenuCrearPregunta();
+	}
+	
+	@FXML
+	public void onEliminarPreguntaButtonAction(){
+		if(Utils.confirmacion("Confirmacion", 
+				"¿Realmente quiere eliminar esta pregunta?", 
+				"Si elimina esta pregunta no podrá recuperarla pero se mantendrán intacto los resultados de los test en la que se incluyó esta pregunta."))
+		{
+			Pregunta pregunta = tablaPreguntas.selectionModelProperty().get().getSelectedItem();
+			
+			if(!ServiceLocator.getPreguntaServices().eliminarPregunta(pregunta))
+				Utils.mensaje(AlertType.ERROR, "Error", "Error al eliminar", "Ha ocurrido un error al eliminar la pregunta, contacta con el administrador!"); 
+		}
+	}
+	
 	public void setMain(Main main) {
 		this.main = main;
 	}
@@ -376,3 +187,24 @@ public class MenuProfesorController {
 //	
 //}
 //});
+
+
+//tablaPreguntas.setRowFactory( tv -> {
+//TableRow<Pregunta> row = new TableRow<>();
+//    row.setOnMouseClicked(event -> {
+//        if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+//        	
+//        	Pregunta rowData = row.getItem();
+//        	//
+//        }
+//    });
+//    return row ;
+//});
+//}
+
+//tablaPreguntas.getSelectionModel().selectedItemProperty().addListener(
+//(observable, oldValue, newValue) -> showPreguntasDetails(newValue));
+//}
+//private void showPreguntasDetails(Pregunta newValue) {
+//System.out.println(newValue.getPregunta1());
+//}

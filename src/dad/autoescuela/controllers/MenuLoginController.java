@@ -33,9 +33,6 @@ public class MenuLoginController {
 	@FXML
 	private void initialize() {
 
-		usuarioTextField.setText("");
-		passwordField.setText("");
-		
 		usuarioTextField.setPromptText("Usuario(DNI)");
 		passwordField.setPromptText("Contraseña");
 		logo.setImage(Images.LOGO_IMAGE);
@@ -57,6 +54,7 @@ public class MenuLoginController {
 			if(pass.equals(usuarios.get(i).getPass())){
 				usuarioActual = usuarios.get(i);
 				ServiceLocator.getConexionServices().setUsuarioActual(usuarioActual);
+				limpiarFormularioLogin();
 				if(usuarios.get(i).isProfesor()){
 					main.showMenuProfesor();
 					main.getPrimaryStage().close();
@@ -73,6 +71,11 @@ public class MenuLoginController {
 		else Utils.mensaje(AlertType.WARNING, "Usuario Incorrecto", 
 				"Los datos no corresponden a un usuario registrado.", 
 				"Revise los datos o contacte con el adminsitrador.");
+	}
+
+	private void limpiarFormularioLogin() {
+		usuarioTextField.setText("");
+		passwordField.setText("");
 	}
 
 	public void setMain(Main main) {

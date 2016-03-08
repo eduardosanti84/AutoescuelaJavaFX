@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dad.autoescuela.controllers.MenuCrearUsuarioController">
+   <center>
+      <BorderPane BorderPane.alignment="CENTER">
+         <center>
+            <GridPane BorderPane.alignment="CENTER">
+              <columnConstraints>
+                <ColumnConstraints hgrow="NEVER" minWidth="29.0" />
+                <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints maxHeight="182.0" minHeight="10.0" vgrow="NEVER" />
+                <RowConstraints maxHeight="206.0" minHeight="10.0" vgrow="NEVER" />
+                <RowConstraints maxHeight="225.0" minHeight="10.0" vgrow="NEVER" />
+                  <RowConstraints maxHeight="259.0" minHeight="10.0" vgrow="NEVER" />
+              </rowConstraints>
+               <children>
+                  <TextField fx:id="nombreTextField" GridPane.columnIndex="1" GridPane.valignment="BOTTOM">
+                     <GridPane.margin>
+                        <Insets bottom="8.0" top="8.0" />
+                     </GridPane.margin>
+                  </TextField>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Nombre: " GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+                     <GridPane.margin>
+                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                     </GridPane.margin></Text>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="DNI: " GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                     <GridPane.margin>
+                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                     </GridPane.margin></Text>
+                  <TextField fx:id="dniTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                     <GridPane.margin>
+                        <Insets bottom="8.0" top="8.0" />
+                     </GridPane.margin>
+                  </TextField>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Password: " GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                     <GridPane.margin>
+                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                     </GridPane.margin></Text>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Profesor: " GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+                     <GridPane.margin>
+                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                     </GridPane.margin></Text>
+                  <ToggleButton fx:id="profesorButton" mnemonicParsing="false" text="NO" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="3">
+                     <GridPane.margin>
+                        <Insets bottom="8.0" right="8.0" top="8.0" />
+                     </GridPane.margin>
+                  </ToggleButton>
+                  <PasswordField fx:id="passwordTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+                     <GridPane.margin>
+                        <Insets bottom="8.0" top="8.0" />
+                     </GridPane.margin>
+                  </PasswordField>
+               </children>
+               <BorderPane.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </BorderPane.margin>
+            </GridPane>
+         </center>
+      </BorderPane>
+   </center>
+   <bottom>
+      <HBox alignment="CENTER_RIGHT" BorderPane.alignment="CENTER_RIGHT">
+         <children>
+            <Button fx:id="guardarUsuarioButton" mnemonicParsing="false" onAction="#onGuardarUsuarioButtonAction" text="Guardar" BorderPane.alignment="CENTER">
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" top="10.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="guardarCerrarUsuarioButton" mnemonicParsing="false" onAction="#onGuardarCerrarUsuarioButtonAction" text="Guardar y Cerrar">
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+   </bottom>
+</BorderPane>

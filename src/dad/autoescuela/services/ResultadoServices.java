@@ -58,7 +58,6 @@ public class ResultadoServices implements IResultadoServices {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 	}
 
 	@Override
