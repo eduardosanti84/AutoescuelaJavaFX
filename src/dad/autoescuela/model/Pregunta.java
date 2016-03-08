@@ -12,10 +12,10 @@ public class Pregunta {
 
 	private final IntegerProperty idPregunta = new SimpleIntegerProperty();
 	private final StringProperty enunciado = new SimpleStringProperty();
-	private final StringProperty pregunta1 = new SimpleStringProperty();
-	private final StringProperty pregunta2 = new SimpleStringProperty();
-	private final StringProperty pregunta3 = new SimpleStringProperty();
-	private final StringProperty respuesta = new SimpleStringProperty();
+	private final StringProperty respuesta1 = new SimpleStringProperty();
+	private final StringProperty respuesta2 = new SimpleStringProperty();
+	private final StringProperty respuesta3 = new SimpleStringProperty();
+	private final StringProperty respuestaCorrecta = new SimpleStringProperty();
 	private final ObjectProperty<Image> imagen = new SimpleObjectProperty<Image>();
 	
 	public final IntegerProperty idPreguntaProperty() {
@@ -42,52 +42,63 @@ public class Pregunta {
 		this.enunciadoProperty().set(enunciado);
 	}
 	
-	public final StringProperty pregunta1Property() {
-		return this.pregunta1;
+	public final StringProperty respuesta1Property() {
+		return this.respuesta1;
 	}
 	
-	public final java.lang.String getPregunta1() {
-		return this.pregunta1Property().get();
+
+	public final java.lang.String getRespuesta1() {
+		return this.respuesta1Property().get();
 	}
 	
-	public final void setPregunta1(final java.lang.String pregunta1) {
-		this.pregunta1Property().set(pregunta1);
+
+	public final void setRespuesta1(final java.lang.String respuesta1) {
+		this.respuesta1Property().set(respuesta1);
 	}
 	
-	public final StringProperty pregunta2Property() {
-		return this.pregunta2;
+
+	public final StringProperty respuesta2Property() {
+		return this.respuesta2;
 	}
 	
-	public final java.lang.String getPregunta2() {
-		return this.pregunta2Property().get();
+
+	public final java.lang.String getRespuesta2() {
+		return this.respuesta2Property().get();
 	}
 	
-	public final void setPregunta2(final java.lang.String pregunta2) {
-		this.pregunta2Property().set(pregunta2);
+
+	public final void setRespuesta2(final java.lang.String respuesta2) {
+		this.respuesta2Property().set(respuesta2);
 	}
 	
-	public final StringProperty pregunta3Property() {
-		return this.pregunta3;
+
+	public final StringProperty respuesta3Property() {
+		return this.respuesta3;
 	}
 	
-	public final java.lang.String getPregunta3() {
-		return this.pregunta3Property().get();
+
+	public final java.lang.String getRespuesta3() {
+		return this.respuesta3Property().get();
 	}
 	
-	public final void setPregunta3(final java.lang.String pregunta3) {
-		this.pregunta3Property().set(pregunta3);
+
+	public final void setRespuesta3(final java.lang.String respuesta3) {
+		this.respuesta3Property().set(respuesta3);
 	}
 	
-	public final StringProperty respuestaProperty() {
-		return this.respuesta;
+
+	public final StringProperty respuestaCorrectaProperty() {
+		return this.respuestaCorrecta;
 	}
 	
-	public final java.lang.String getRespuesta() {
-		return this.respuestaProperty().get();
+
+	public final java.lang.String getRespuestaCorrecta() {
+		return this.respuestaCorrectaProperty().get();
 	}
 	
-	public final void setRespuesta(final java.lang.String respuesta) {
-		this.respuestaProperty().set(respuesta);
+
+	public final void setRespuestaCorrecta(final java.lang.String respuestaCorrecta) {
+		this.respuestaCorrectaProperty().set(respuestaCorrecta);
 	}
 	
 	public final ObjectProperty<Image> imagenProperty() {

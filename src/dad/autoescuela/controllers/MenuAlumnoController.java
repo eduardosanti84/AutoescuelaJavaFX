@@ -316,9 +316,9 @@ public class MenuAlumnoController {
 			else
 				imagenImageView.setImage(Images.NO_IMAGE);
 			preguntaLabel.setText(pregunta.getEnunciado());
-			respuesta1RadioButton.setText(pregunta.getPregunta1());
-			respuesta2RadioButton.setText(pregunta.getPregunta2());
-			respuesta3RadioButton.setText(pregunta.getPregunta3());
+			respuesta1RadioButton.setText(pregunta.getRespuesta1());
+			respuesta2RadioButton.setText(pregunta.getRespuesta2());
+			respuesta3RadioButton.setText(pregunta.getRespuesta3());
 			
 			//TODO REVISAR EL CONTADOR EN INTERFAZ
 			numPreguntaLabel.setText("" + (posicionActual + 1));
@@ -330,7 +330,7 @@ public class MenuAlumnoController {
 		
 		Respuesta respuesta = new Respuesta();
 		respuesta.setIdPregunta(pregunta.getId());
-		respuesta.setRespuestaCorrecta(pregunta.getRespuesta());
+		respuesta.setRespuestaCorrecta(pregunta.getRespuestaCorrecta());
 		respuesta.setRespuestaUsuario(respuestaUsuario);
 
 		respuestasTest.add(respuesta);
@@ -348,8 +348,6 @@ public class MenuAlumnoController {
 	public void setMain(Main main) {
 		this.main = main;
 	}
-	
-	
 }
 
 

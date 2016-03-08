@@ -7,7 +7,6 @@ import java.sql.SQLException;
 
 import dad.autoescuela.controllers.MenuLoginController;
 import dad.autoescuela.model.Resultado;
-import dad.autoescuela.model.Usuario;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 

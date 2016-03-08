@@ -2,10 +2,6 @@ package dad.autoescuela.services;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -37,10 +33,10 @@ public class PreguntaServices implements IPreguntaServices{
             	
             	pregunta.setId(rs.getInt("id"));
             	pregunta.setEnunciado(rs.getString("enunciado"));
-            	pregunta.setPregunta1(rs.getString("pregunta1"));
-            	pregunta.setPregunta2(rs.getString("pregunta2"));
-            	pregunta.setPregunta3(rs.getString("pregunta3"));
-            	pregunta.setRespuesta(rs.getString("respuesta"));
+            	pregunta.setRespuesta1(rs.getString("respuesta1"));
+            	pregunta.setRespuesta2(rs.getString("respuesta2"));
+            	pregunta.setRespuesta3(rs.getString("respuesta3"));
+            	pregunta.setRespuestaCorrecta(rs.getString("respuestaCorrecta"));
 
             	Blob blob = rs.getBlob("imagen");
             	if (blob != null) {
@@ -99,8 +95,8 @@ public class PreguntaServices implements IPreguntaServices{
 	}
 	
 	@Override
-	public boolean comprobarRespuesta(Pregunta pregunta, String respuesta) {
-		if (pregunta.getRespuesta().equals(respuesta)) {
+	public boolean comprobarRespuesta(Pregunta pregunta, String respuestaUsuario) {
+		if (pregunta.getRespuestaCorrecta().equals(respuestaUsuario)) {
 			return true;
 		}
 		return false;
@@ -112,7 +108,7 @@ public class PreguntaServices implements IPreguntaServices{
 		PreparedStatement preparedStatement = null;
 		
 		try{ 
-			String consulta = "INSERT INTO preguntas(enunciado, pregunta1, pregunta2, pregunta3, respuesta, imagen) VALUES (?, ?, ?, ?, ?, ?)";    
+			String consulta = "INSERT INTO preguntas(enunciado, respuesta1, respuesta2, respuesta3, respuestaCorrecto, imagen) VALUES (?, ?, ?, ?, ?, ?)";    
 			preparedStatement = conexion.prepareStatement(consulta);
 			
 			if(pregunta.getImagen() != null){
@@ -127,11 +123,10 @@ public class PreguntaServices implements IPreguntaServices{
 			}
 			
 			preparedStatement.setString(1, pregunta.getEnunciado());
-			preparedStatement.setString(2, pregunta.getPregunta1());
-			preparedStatement.setString(3, pregunta.getPregunta2());
-			preparedStatement.setString(4, pregunta.getPregunta3());
-			preparedStatement.setString(5, pregunta.getRespuesta());
-			
+			preparedStatement.setString(2, pregunta.getRespuesta1());
+			preparedStatement.setString(3, pregunta.getRespuesta2());
+			preparedStatement.setString(4, pregunta.getRespuesta3());
+			preparedStatement.setString(5, pregunta.getRespuestaCorrecta());
 			
 			preparedStatement.executeUpdate();
 			
