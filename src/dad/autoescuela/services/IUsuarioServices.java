@@ -1,11 +1,14 @@
 package dad.autoescuela.services;
 
+import java.util.List;
+
 import dad.autoescuela.model.Usuario;
-import javafx.collections.ObservableList;
 
 public interface IUsuarioServices {
 
-	public ObservableList<Usuario> listarUsuarios();
+	public List<Usuario> listarUsuarios();
 	public Boolean crearUsuario(Usuario usuario);
 	public Boolean eliminarUsuario(Usuario usuario);
+	public Boolean login(String usuario, String pass);
+	
 }

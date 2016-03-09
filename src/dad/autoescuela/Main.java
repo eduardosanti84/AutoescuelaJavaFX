@@ -7,7 +7,11 @@ import dad.autoescuela.controllers.MenuCrearPreguntaController;
 import dad.autoescuela.controllers.MenuCrearUsuarioController;
 import dad.autoescuela.controllers.MenuLoginController;
 import dad.autoescuela.controllers.MenuProfesorController;
+import dad.autoescuela.model.Usuario;
+import dad.autoescuela.services.ServiceLocator;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -20,9 +24,12 @@ public class Main extends Application {
 	
 	//Stage stage;
 	Stage primaryStage;
+
+	private ObservableList<Usuario> usuarios = FXCollections.observableArrayList();
 	
 	@Override
 	public void start(Stage primaryStage) {
+		usuarios.addAll(ServiceLocator.getUsuarioServices().listarUsuarios());
 		
 		primaryStage = new Stage();
 		this.primaryStage = primaryStage;
@@ -77,6 +84,7 @@ public class Main extends Application {
 			
 			MenuProfesorController menuProfesorController = loader.getController();
 			menuProfesorController.setMain(this);
+			menuProfesorController.setListaUsuarios(usuarios);
 			
 			stageProfesor.setScene(scene);
 			stageProfesor.show();
@@ -99,7 +107,7 @@ public class Main extends Application {
 			menuCrearUsuarioController.setMain(this);
 			
 			stageCrearUsuario.setScene(scene);
-			stageCrearUsuario.show();
+			stageCrearUsuario.showAndWait();
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -145,6 +153,10 @@ public class Main extends Application {
 	}
 	public Stage getStagesCrearPregunta() {
 		return stageCrearPregunta;
+	}
+
+	public ObservableList<Usuario> getUsuarios() {
+		return usuarios;
 	}
 
 	public static void main(String[] args) {

@@ -34,6 +34,13 @@ public class ConexionServices implements IConexionServices {
 
 	@Override
 	public Connection getConexion() {
+		try {
+			if (conexion == null || conexion.isClosed()) {
+				conectar();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return conexion; 
 	}
 	

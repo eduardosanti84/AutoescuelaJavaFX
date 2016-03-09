@@ -6,6 +6,8 @@ import dad.autoescuela.model.Usuario;
 import dad.autoescuela.resources.images.Images;
 import dad.autoescuela.services.ServiceLocator;
 import dad.autoescuela.utils.Utils;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert.AlertType;
@@ -55,7 +57,7 @@ public class MenuProfesorController {
 	private StackPane banner;
 	@FXML
 	private Button desconectarButton;
-
+	
 	public MenuProfesorController() {
 		usuarioActual = ServiceLocator.getConexionServices().getUsuarioActual();
 	}
@@ -76,7 +78,7 @@ public class MenuProfesorController {
 		dniColumn.setCellValueFactory(cellData -> cellData.getValue().dniProperty());
 		nombreColumn.setCellValueFactory(cellData -> cellData.getValue().nombreProperty());
 		profesorColumn.setCellValueFactory(cellData -> cellData.getValue().profesorProperty());
-		tablaUsuarios.setItems(ServiceLocator.getUsuarioServices().listarUsuarios());
+//		tablaUsuarios.setItems(FXCollections.observableArrayList(ServiceLocator.getUsuarioServices().listarUsuarios()));
 		
 		// cambiamos la propiedad de la columna e insertamos imagen según lo que reciba.             
 		profesorColumn.setCellFactory(new Callback<TableColumn<Usuario, Boolean>,TableCell<Usuario, Boolean>>(){        
@@ -85,7 +87,7 @@ public class MenuProfesorController {
 		        TableCell<Usuario, Boolean> cell = new TableCell<Usuario, Boolean>(){
 		            @Override
 		            public void updateItem(Boolean item, boolean empty) {                        
-		                if(item!=null){ 
+		                if(item!=null && !empty){
 		                	
 		                    HBox box= new HBox();
 		                    box.setAlignment(Pos.CENTER);
@@ -104,6 +106,8 @@ public class MenuProfesorController {
 
 		                    box.getChildren().addAll(imageview, vbox); 
 		                    setGraphic(box);
+		                } else {
+		                	setGraphic(null);
 		                }
 		            }
 		        };              
@@ -170,6 +174,11 @@ public class MenuProfesorController {
 	public void setMain(Main main) {
 		this.main = main;
 	}
+
+	public void setListaUsuarios(ObservableList<Usuario> usuarios) {
+		tablaUsuarios.setItems(usuarios);
+	}
+	
 }
 
 

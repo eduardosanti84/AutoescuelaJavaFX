@@ -72,6 +72,7 @@ public class MenuCrearUsuarioController {
 			if(ServiceLocator.getUsuarioServices().crearUsuario(usuario)){
 				Utils.mensaje(AlertType.INFORMATION, "Correcto", "Confirmacion de Inserción", "Se ha registrado el nuevo usuario!");
 				limpiarFormularioUsusario();
+				main.getUsuarios().add(usuario);
 			}
 			else Utils.mensaje(AlertType.ERROR, "Error", "Error al crear", "Ha ocurrido un error al crear el usuario, comprueba los datos.!");
 		}

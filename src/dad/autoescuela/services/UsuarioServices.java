@@ -3,24 +3,23 @@ package dad.autoescuela.services;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import dad.autoescuela.model.Usuario;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 public class UsuarioServices implements IUsuarioServices{
 	
-	private Connection conexion;
-	private ObservableList<Usuario> usuarios = FXCollections.observableArrayList();
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////TODO CONSTRUCTOR //////
-	public UsuarioServices() {
-		conexion = ServiceLocator.getConexionServices().getConexion();
-		
+	///////////////////////////////////////////////////////////////////////////////////TODO METODOS PARA CONTROLADOR //////
+	@Override
+	public List<Usuario> listarUsuarios() {
+		Connection conexion = ServiceLocator.getConexionServices().getConexion();
+		List<Usuario> usuarios = new ArrayList<Usuario>();
 		try{ 
 			String consulta = "SELECT * from usuarios";    
 			ResultSet rs = conexion.createStatement().executeQuery(consulta); 
-
+			
             while(rs.next()){
             	
             	Usuario usuario = new Usuario();
@@ -33,53 +32,14 @@ public class UsuarioServices implements IUsuarioServices{
             }
 		}catch(Exception e){  
 			e.printStackTrace();      
-		}  
-	}
-
-	///////////////////////////////////////////////////////////////////////////////////TODO METODOS PARA CONTROLADOR //////
-	@Override
-	public ObservableList<Usuario> listarUsuarios() {
+		}
 		return usuarios;
 	}
 	
-	@Override
-	public Boolean crearUsuario(Usuario usuario) {
-
-		if(!usuarios.contains(usuario)){
-			for(int i = 0; i < usuarios.size(); i++){
-				if(usuarios.get(i).getDni().equals(usuario.getDni())){
-					break;
-				}
-			}
-			
-			int i;
-			for (i = 0; i < usuarios.size() && !usuarios.get(i).getDni().equals(usuario.getDni()); i++);
-			
-			if (i == usuarios.size()) {
-				
-				usuarios.add(usuario);	
-				crearUsuarioDB(usuario);
-				
-				return true;
-			}
-		}
-		return false;
-	}
-	@Override
-	public Boolean eliminarUsuario(Usuario usuario) {
-
-		if(usuarios.contains(usuario)){
-			
-			usuarios.remove(usuario);
-			eliminarUsuarioDB(usuario);
-			return true;
-		}
-		return false;
-	}
-	
 	//////////////////////////////////////////////////////////////////////////////////////////////TODO METODOS DE DB //////
-	private void crearUsuarioDB(Usuario usuario) {
-		
+	public Boolean crearUsuario(Usuario usuario) {
+		Connection conexion = ServiceLocator.getConexionServices().getConexion();
+
 		PreparedStatement preparedStatement = null;
 		
 		try{ 
@@ -92,14 +52,16 @@ public class UsuarioServices implements IUsuarioServices{
 			preparedStatement.setBoolean(4, usuario.isProfesor());
 			
 			preparedStatement.executeUpdate();
-			
+			return true;
 		}catch(Exception e){  
-			e.printStackTrace();      
+			e.printStackTrace();  
+			return false;
 		} 
 	}
 	
-	private void eliminarUsuarioDB(Usuario usuario) {
-		
+	public Boolean eliminarUsuario(Usuario usuario) {
+		Connection conexion = ServiceLocator.getConexionServices().getConexion();
+
 		PreparedStatement preparedStatement = null;
 		
 		try{ 
@@ -108,9 +70,15 @@ public class UsuarioServices implements IUsuarioServices{
 			
 			preparedStatement.setString(1, usuario.getDni());
 			preparedStatement.executeUpdate();
-			
-		}catch(Exception e){  
-			e.printStackTrace();      
+			return true;
+		}catch(SQLException e) {  
+			e.printStackTrace();
+			return false;
 		} 
 	}
+	
+	public Boolean login(String usuario, String pass) {
+		return true;
+	}
+	
 }

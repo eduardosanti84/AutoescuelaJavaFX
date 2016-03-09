@@ -17,30 +17,6 @@ public class ResultadoServices implements IResultadoServices {
 	
 	public ResultadoServices(){
 		conexion = ServiceLocator.getConexionServices().getConexion();
-		
-		try{ 			
-			String consulta = "SELECT alumno_dni, aciertos, fallos, total FROM resultados WHERE alumno_dni = ?";
-			PreparedStatement ps = conexion.prepareStatement(consulta);
-			
-			if(ServiceLocator.getConexionServices().getUsuarioActual() == null)
-				ServiceLocator.getConexionServices().conectar();
-			ps.setString(1, MenuLoginController.usuarioActual.getDni());
-			
-			ResultSet rs = ps.executeQuery();
-
-            while(rs.next()){
-            	Resultado resultado = new Resultado();
-            	
-	            resultado.setAlumno_dni(rs.getString("alumno_dni"));
-	            resultado.setAciertos(rs.getInt("aciertos"));
-	            resultado.setFallos(rs.getInt("fallos"));
-	            resultado.setTotal(rs.getInt("total"));
-            	
-	            resultados.add(resultado);
-           }
-		}catch(Exception e){  
-			e.printStackTrace();      
-		}
 	}
 	
 	@Override
@@ -62,6 +38,31 @@ public class ResultadoServices implements IResultadoServices {
 
 	@Override
 	public ObservableList<Resultado> listarResultados() {
+		
+		try{ 			
+			String consulta = "SELECT alumno_dni, aciertos, fallos, total FROM resultados WHERE alumno_dni = ?";
+			PreparedStatement ps = conexion.prepareStatement(consulta);
+			
+			if(ServiceLocator.getConexionServices().getUsuarioActual() == null)
+				ServiceLocator.getConexionServices().conectar();
+			ps.setString(1, ServiceLocator.getConexionServices().getUsuarioActual().getDni());
+			
+			ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+            	Resultado resultado = new Resultado();
+            	
+	            resultado.setAlumno_dni(rs.getString("alumno_dni"));
+	            resultado.setAciertos(rs.getInt("aciertos"));
+	            resultado.setFallos(rs.getInt("fallos"));
+	            resultado.setTotal(rs.getInt("total"));
+            	
+	            resultados.add(resultado);
+           }
+		}catch(Exception e){  
+			e.printStackTrace();      
+		}
+
 		return resultados;
 	}
 }

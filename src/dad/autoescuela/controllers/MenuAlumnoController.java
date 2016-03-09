@@ -10,6 +10,10 @@ import dad.autoescuela.model.Resultado;
 import dad.autoescuela.model.Usuario;
 import dad.autoescuela.resources.images.Images;
 import dad.autoescuela.services.ServiceLocator;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -18,6 +22,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
@@ -99,6 +104,11 @@ public class MenuAlumnoController {
 		respuesta2RadioButton.setToggleGroup(grupoRB);
 		respuesta3RadioButton.setToggleGroup(grupoRB);
 		//respuesta1RadioButton.setSelected(true);
+		grupoRB.selectedToggleProperty().addListener(new ChangeListener<Toggle>(){
+			public void changed(ObservableValue<? extends Toggle> ov, Toggle old_toggle, Toggle new_toggle) {
+				continuarTestButton.requestFocus();
+			}
+		});
 		
 		//////////////////////////////////////////////////////////////////// CONFIGURACION DE LAS CELDAS DE LA TABLA /////
 		aciertosColumn.setCellValueFactory(cellData -> cellData.getValue().aciertosProperty());
@@ -114,8 +124,11 @@ public class MenuAlumnoController {
 	 **/
 	@FXML
 	public void onDesconectarButtonAction() {
+		
+		ObservableList<Resultado> nulo = FXCollections.observableArrayList();
 		main.getStagesAlumno().close();
 		main.getPrimaryStage().show();	
+		
 	}
 	
 	@FXML
@@ -163,7 +176,7 @@ public class MenuAlumnoController {
 			else{
 				posicionActual++;
 				if(posicionActual < tamTotalTest){
-					//mostramos una nueva pregutna
+					//mostramos una nueva pregunta
 					mostrarPregunta(preguntasTest.get(posicionActual));
 					habilitarRadioButton(true);
 					continuarTestButton.setText("Comprobar");
@@ -189,6 +202,9 @@ public class MenuAlumnoController {
 			respuesta1RadioButton.setStyle("");
 			respuesta2RadioButton.setStyle("");
 			respuesta3RadioButton.setStyle("");
+			respuesta1RadioButton.setSelected(false);
+			respuesta2RadioButton.setSelected(false);
+			respuesta3RadioButton.setSelected(false);
 		}
 		else{
 			respuesta1RadioButton.setDisable(true);
@@ -274,6 +290,7 @@ public class MenuAlumnoController {
 		habilitarRadioButton(true);
 		preguntasTest.clear();
 		respuestasTest.clear();
+		continuarTestButton.setText("Comprobar");
 	}
 	
 	private void mostrarPregunta(Pregunta pregunta){
@@ -327,9 +344,6 @@ public class MenuAlumnoController {
 		this.main = main;
 	}
 }
-
-
-
 
 
 //@FXML
